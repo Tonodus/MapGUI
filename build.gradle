@@ -1,0 +1,21 @@
+apply plugin: "java"
+apply plugin: "maven"
+apply plugin: "idea"
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    maven {
+        url "http://repo.bukkit.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    compile group: "org.bukkit", name: "bukkit", version: "1.7.9-R0.2"
+}
+
+task bukkit(dependsOn: build, type: Copy) << {
+    from 'build/libs'
+    into 'E:/BukkitDev/plugins'
+    inclue '**/*.jar'
+}
