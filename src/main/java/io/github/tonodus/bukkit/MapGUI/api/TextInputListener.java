@@ -7,11 +7,11 @@ package io.github.tonodus.bukkit.MapGUI.api;
 /**
  * A listener for text input threw a player
  */
-public interface TextInputListener {
+public interface TextInputListener<O> {
     /**
      * Called, when a player inputs text
      *
      * @param text The text the player typed
      */
-    public void onTextInput(String text);
+    public void onTextInput(String text, O owner);
 }

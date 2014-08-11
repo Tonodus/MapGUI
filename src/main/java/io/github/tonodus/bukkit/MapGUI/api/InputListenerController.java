@@ -3,16 +3,16 @@ package io.github.tonodus.bukkit.MapGUI.api;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public interface InputListenerController {
-    public void addMouseListener(MouseListener listener);
+public interface InputListenerController<O> {
+    public void addMouseListener(MouseListener<O> listener);
 
-    public void addScrollListener(MouseWheelListener listener);
+    public void addScrollListener(MouseWheelListener<O> listener);
 
-    public void addInputListener(TextInputListener listener);
+    public void addInputListener(TextInputListener<O> listener);
 
-    public void removeMouseListener(MouseListener listener);
+    public void removeMouseListener(MouseListener<O> listener);
 
-    public void removeScrollListener(MouseWheelListener listener);
+    public void removeScrollListener(MouseWheelListener<O> listener);
 
-    public void removeInputListener(TextInputListener listener);
+    public void removeInputListener(TextInputListener<O> listener);
 }
