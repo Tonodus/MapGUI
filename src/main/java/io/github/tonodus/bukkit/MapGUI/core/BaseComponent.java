@@ -1,9 +1,8 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.api.Component;
-import io.github.tonodus.bukkit.MapGUI.api.MouseListener;
-import io.github.tonodus.bukkit.MapGUI.api.MouseWheelListener;
-import io.github.tonodus.bukkit.MapGUI.api.TextInputListener;
+import io.github.tonodus.bukkit.MapGUI.api.*;
+import io.github.tonodus.bukkit.MapGUI.api.Window;
 
 import java.awt.*;
 
@@ -12,10 +11,23 @@ import java.awt.*;
  */
 public abstract class BaseComponent implements Component {
     private int x, y, w, h;
-    private DefaultInputController controller;
+    private DefaultInputController<Window, Component> controller;
     private boolean hasFocus = false;
-    private int height;
-    private int width;
+
+    private Window attachedTo = null;
+
+    private MouseListener<Window> checkMouse = new MouseCheck();
+    private MouseWheelListener<Window> checkWheel = new WheelCheck();
+    private TextInputListener<Window> checkInput = new InputCheck();
+
+    public BaseComponent() {
+        controller = new DefaultInputController<Window, Component>() {
+            @Override
+            protected Component convert(Window input) {
+                return BaseComponent.this;
+            }
+        };
+    }
 
     public void setBounds(int x, int y, int w, int h) {
         setPosition(x, y);
@@ -32,18 +44,48 @@ public abstract class BaseComponent implements Component {
         setY(y);
     }
 
-    public void setX(int x) {
-        this.x = x;
+    @Override
+    public abstract void draw(Graphics g);
+
+    @Override
+    public void onAttachedTo(Window window) {
+        this.attachedTo = window;
+        window.addMouseListener(checkMouse);
+        window.addInputListener(checkInput);
+        window.addScrollListener(checkWheel);
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void onDetachedFrom(Window window) {
+        this.attachedTo = null;
+        window.removeMouseListener(checkMouse);
+        window.removeInputListener(checkInput);
+        window.removeScrollListener(checkWheel);
+    }
 
+    private boolean is(int x, int y) {
+        if (x >= getX() && x <= getX() + getWidth() &&
+                y >= getY() && y <= getY() + getHeight())
+            return true;
+        return false;
+    }
+
+    @Override
+    public boolean requestFocus() {
+        if (attachedTo instanceof FocusWindow) {
+            ((FocusWindow) attachedTo).setFocused(this);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public int getX() {
         return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
     }
 
     @Override
@@ -52,13 +94,28 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    @Override
     public int getWidth() {
         return w;
     }
 
     @Override
+    public void setWidth(int width) {
+        this.w = width;
+    }
+
+    @Override
     public int getHeight() {
         return h;
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.h = height;
     }
 
     @Override
@@ -72,69 +129,65 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void addMouseListener(MouseListener listener) {
+    public void addMouseListener(MouseListener<Component> listener) {
         controller.addMouseListener(listener);
     }
 
     @Override
-    public void addScrollListener(MouseWheelListener listener) {
+    public void addScrollListener(MouseWheelListener<Component> listener) {
         controller.addScrollListener(listener);
     }
 
     @Override
-    public void addInputListener(TextInputListener listener) {
+    public void addInputListener(TextInputListener<Component> listener) {
         controller.addInputListener(listener);
     }
 
     @Override
-    public void removeMouseListener(MouseListener listener) {
+    public void removeMouseListener(MouseListener<Component> listener) {
         controller.removeMouseListener(listener);
     }
 
     @Override
-    public void removeScrollListener(MouseWheelListener listener) {
+    public void removeScrollListener(MouseWheelListener<Component> listener) {
         controller.removeScrollListener(listener);
     }
 
     @Override
-    public void removeInputListener(TextInputListener listener) {
+    public void removeInputListener(TextInputListener<Component> listener) {
         controller.removeInputListener(listener);
     }
 
-    @Override
-    public void onLeftClick(int x, int y, boolean withShift) {
-        controller.onLeftClick(x, y, withShift);
+    private class MouseCheck implements MouseListener<Window> {
+        @Override
+        public void onLeftClick(int x, int y, boolean withShift, Window owner) {
+            if (is(x, y))
+                requestFocus();
+            controller.onLeftClick(x, y, withShift, owner);
+        }
+
+        @Override
+        public void onRightClick(int x, int y, boolean withShift, Window owner) {
+            controller.onRightClick(x, y, withShift, owner);
+        }
+
+        @Override
+        public void onMove(int oldX, int oldY, int newX, int newY, Window owner) {
+            controller.onMove(oldX, oldY, newX, newY, owner);
+        }
     }
 
-    @Override
-    public void onRightClick(int x, int y, boolean withShift) {
-        controller.onRightClick(x, y, withShift);
+    private class WheelCheck implements MouseWheelListener<Window> {
+        @Override
+        public void onMouseWheel(int amount, Window owner) {
+            controller.onMouseWheel(amount, owner);
+        }
     }
 
-    @Override
-    public void onMove(int oldX, int oldY, int newX, int newY) {
-        controller.onMove(oldX, oldY, newX, newY);
-    }
-
-    @Override
-    public void onMouseWheel(int amount) {
-        controller.onMouseWheel(amount);
-    }
-
-    @Override
-    public void onTextInput(String text) {
-        controller.onTextInput(text);
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
+    private class InputCheck implements TextInputListener<Window> {
+        @Override
+        public void onTextInput(String text, Window owner) {
+            controller.onTextInput(text, owner);
+        }
     }
 }

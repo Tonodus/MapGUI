@@ -31,7 +31,7 @@ class DefaultMapGui extends MapRenderer implements MapGUI {
     private Plugin plugin;
     private boolean needRedraw;
 
-    private DefaultInputController inputController;
+    private DefaultInputController<MapGUI, MapGUI> inputController;
 
     private Player showTo = null;
     private ItemStack itemBefore;
@@ -49,7 +49,7 @@ class DefaultMapGui extends MapRenderer implements MapGUI {
         this.window = null;
         this.cursor = new DefaultCursor();
         this.plugin = plugin;
-        this.inputController = new DefaultInputController();
+        this.inputController = new SameInputController<MapGUI>();
         this.mapGetter = getter;
 
         this.image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
@@ -110,9 +110,9 @@ class DefaultMapGui extends MapRenderer implements MapGUI {
         event.setCancelled(true);
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR)
-            inputController.onLeftClick(event.getPlayer().isSneaking());
+            inputController.onLeftClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking(), this);
         else if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)
-            inputController.onRightClick(event.getPlayer().isSneaking());
+            inputController.onRightClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking(), this);
     }
 
     @Override
@@ -141,32 +141,32 @@ class DefaultMapGui extends MapRenderer implements MapGUI {
     }
 
     @Override
-    public void addMouseListener(MouseListener listener) {
+    public void addMouseListener(MouseListener<MapGUI> listener) {
         inputController.addMouseListener(listener);
     }
 
     @Override
-    public void addScrollListener(MouseWheelListener listener) {
+    public void addScrollListener(MouseWheelListener<MapGUI> listener) {
         inputController.addScrollListener(listener);
     }
 
     @Override
-    public void addInputListener(TextInputListener listener) {
+    public void addInputListener(TextInputListener<MapGUI> listener) {
         inputController.addInputListener(listener);
     }
 
     @Override
-    public void removeMouseListener(MouseListener listener) {
+    public void removeMouseListener(MouseListener<MapGUI> listener) {
         inputController.removeMouseListener(listener);
     }
 
     @Override
-    public void removeScrollListener(MouseWheelListener listener) {
+    public void removeScrollListener(MouseWheelListener<MapGUI> listener) {
         inputController.removeScrollListener(listener);
     }
 
     @Override
-    public void removeInputListener(TextInputListener listener) {
+    public void removeInputListener(TextInputListener<MapGUI> listener) {
         inputController.removeInputListener(listener);
     }
 }

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * The base interface
  */
-public interface MapGUI extends InputListenerController {
+public interface MapGUI extends InputListenerController<MapGUI> {
     /**
      * Sets the current displayed {@link Window window}
      *

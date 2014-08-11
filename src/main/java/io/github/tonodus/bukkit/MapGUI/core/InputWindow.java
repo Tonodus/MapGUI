@@ -9,10 +9,16 @@ import java.awt.*;
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 public abstract class InputWindow implements Window {
-    private DefaultInputController controller;
+    private DefaultInputController<MapGUI, Window> controller;
 
     public InputWindow() {
-        controller = new DefaultInputController();
+        controller = new DefaultInputController<MapGUI, Window>() {
+
+            @Override
+            protected Window convert(MapGUI input) {
+                return InputWindow.this;
+            }
+        };
     }
 
     @Override
@@ -33,27 +39,27 @@ public abstract class InputWindow implements Window {
     }
 
     @Override
-    public void addMouseListener(MouseListener listener) {
+    public void addMouseListener(MouseListener<Window> listener) {
         controller.addMouseListener(listener);
     }
 
     @Override
-    public void addScrollListener(MouseWheelListener listener) {
+    public void addScrollListener(MouseWheelListener<Window> listener) {
         controller.addScrollListener(listener);
     }
 
     @Override
-    public void addInputListener(TextInputListener listener) {
+    public void addInputListener(TextInputListener<Window> listener) {
         controller.addInputListener(listener);
     }
 
     @Override
-    public void removeMouseListener(MouseListener listener) {
+    public void removeMouseListener(MouseListener<Window> listener) {
         controller.removeMouseListener(listener);
     }
 
     @Override
-    public void removeScrollListener(MouseWheelListener listener) {
+    public void removeScrollListener(MouseWheelListener<Window> listener) {
         controller.removeScrollListener(listener);
     }
 
