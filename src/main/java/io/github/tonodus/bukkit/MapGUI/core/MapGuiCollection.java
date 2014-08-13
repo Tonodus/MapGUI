@@ -13,7 +13,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 13.08.2014.
@@ -56,8 +55,13 @@ public class MapGuiCollection {
             }
 
             @Override
-            public void onDispose(MapGUI me) {
-                guis.remove(me);
+            public void onDispose(final MapGUI me) {
+                Bukkit.getScheduler().runTask(mainPlugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        guis.remove(me);
+                    }
+                });
             }
         });
         guis.add(gui);
@@ -67,32 +71,32 @@ public class MapGuiCollection {
     private class InternListener implements Listener {
         @EventHandler
         public void move(PlayerMoveEvent event) {
-            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
-                gui.next().moveHelper.onMove(event);
+            for (DefaultMapGui gui : guis)
+                gui.moveHelper.onMove(event);
         }
 
         @EventHandler
         public void click(PlayerInteractEvent event) {
-            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
-                gui.next().onClick(event);
+            for (DefaultMapGui gui : guis)
+                gui.onClick(event);
         }
 
         @EventHandler
         public void scroll(PlayerItemHeldEvent event) {
-            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
-                gui.next().onScroll(event);
+            for (DefaultMapGui gui : guis)
+                gui.onScroll(event);
         }
 
         @EventHandler
         public void drop(PlayerDropItemEvent event) {
-            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
-                gui.next().onDrop(event);
+            for (DefaultMapGui gui : guis)
+                gui.onDrop(event);
         }
 
         @EventHandler
         public void quit(PlayerQuitEvent event) {
-            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
-                gui.next().onQuit(event);
+            for (DefaultMapGui gui : guis)
+                gui.onQuit(event);
         }
     }
 }

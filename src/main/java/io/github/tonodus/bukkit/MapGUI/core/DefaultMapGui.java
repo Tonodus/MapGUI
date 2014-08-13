@@ -36,6 +36,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     private MapItemGetter mapGetter;
     private boolean visible = false;
     private Collection<DropListener> dropListeners;
+    private MapView mapView;
 
     public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker) {
         this(plugin, player, worker, defaultGetter);
@@ -67,19 +68,23 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         mapCanvas.getCursors().getCursor(0).setY((byte) cursor.getY());
     }
 
+    private ItemStack toItemStack() {
+        ItemStack map = mapGetter.getMap();
+        map.setDurability(mapView.getId());
+        return map;
+    }
+
     @Override
     public void show() {
         this.visible = true;
         itemBefore = showTo.getItemInHand();
 
-        MapView mapView = Bukkit.createMap(Bukkit.getWorld("world"));
+        mapView = Bukkit.createMap(Bukkit.getWorld("world"));
         for (MapRenderer render : mapView.getRenderers())
             mapView.removeRenderer(render);
 
-        ItemStack map = mapGetter.getMap();
-        map.setDurability(mapView.getId());
+        showTo.setItemInHand(toItemStack());
 
-        showTo.setItemInHand(map);
         mapView.addRenderer(this);
 
         moveHelper.start();
@@ -116,9 +121,11 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     @Override
     public void hide() {
         this.visible = false;
-        this.showTo.setItemInHand(itemBefore);
-        this.itemBefore = null;
+        showTo.setItemInHand(itemBefore);
+        itemBefore = null;
         this.moveHelper.stop();
+        this.mapView.removeRenderer(this);
+        this.mapView = null;
     }
 
     public void onQuit(PlayerQuitEvent event) {
@@ -159,8 +166,13 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
             for (DropListener listener : dropListeners)
                 listener.onPreDispose(this, p);
 
-            hide();
-            dispose();
+            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    hide();
+                    dispose();
+                }
+            });
         }
     }
 

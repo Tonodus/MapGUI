@@ -52,6 +52,11 @@ public interface MapGUI extends InputListenerController<MapGUI> {
 
     /**
      * hides this map from the player
+     * <p/>
+     * NOTE: since this modifies the inventory of the player,
+     * there might be problems
+     * when calling this during an event related to the players inventory.
+     * Use {@link org.bukkit.Bukkit#getScheduler Bukkit.getScheduler()}.{@link org.bukkit.scheduler.BukkitScheduler#runTask(org.bukkit.plugin.Plugin, Runnable) runTask(...)}
      */
     public void hide();
 
