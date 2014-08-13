@@ -10,4 +10,7 @@ public interface MouseListener<O> {
 
     public void onMove(int oldX, int oldY, int newX, int newY, O owner);
 
+    public void onMouseEnter(int newX, int newY, O owner);
+
+    public void onMouseLeave(int lastX, int lastY, O owner);
 }

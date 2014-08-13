@@ -55,6 +55,18 @@ abstract class DefaultInputController<I, O> implements InputListenerController<O
     }
 
     @Override
+    public void onMouseEnter(int newX, int newY, I owner) {
+        for (MouseListener<O> l : m)
+            l.onMouseEnter(newX, newY, convert(owner));
+    }
+
+    @Override
+    public void onMouseLeave(int lastX, int lastY, I owner) {
+        for (MouseListener<O> l : m)
+            l.onMouseLeave(lastX, lastY, convert(owner));
+    }
+
+    @Override
     public void addMouseListener(MouseListener<O> listener) {
         m.add(listener);
     }

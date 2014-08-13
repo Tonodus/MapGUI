@@ -35,4 +35,6 @@ public interface Component extends InputListenerController<Component>, Drawable 
     void onDetachedFrom(Window window);
 
     boolean requestFocus();
+
+    void invalidate();
 }

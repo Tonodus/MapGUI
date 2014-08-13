@@ -10,16 +10,32 @@ import java.awt.*;
  */
 public class Panel extends BaseComponent {
     private Drawable content;
+    private Color background = new Color(0, 0, 0, 255);
+
 
     public Panel(Drawable drawable) {
         this.content = drawable;
     }
 
+    public void setBackground(Color color) {
+        this.background = color;
+    }
+
     @Override
     public void drawAsync(Graphics2D g) {
         g.translate(getX(), getY());
-        content.drawAsync(g);
+        drawBgAsync(g);
+        drawCAsync(g);
         g.translate(-getX(), -getY());
+    }
+
+    protected void drawBgAsync(Graphics2D g) {
+        g.setColor(background);
+        g.fillRect(getX(), getY(), getWidth(), getHeight());
+    }
+
+    protected void drawCAsync(Graphics2D g) {
+        content.drawAsync(g);
     }
 
     @Override

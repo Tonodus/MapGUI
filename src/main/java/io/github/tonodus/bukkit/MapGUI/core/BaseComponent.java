@@ -6,12 +6,11 @@ import io.github.tonodus.bukkit.MapGUI.api.*;
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 public abstract class BaseComponent implements Component {
+    protected Window attachedTo = null;
     private int x = 0, y = 0, w = 0, h = 0;
     private DefaultInputController<Window, Component> controller;
     private boolean hasFocus = false;
-
-    private Window attachedTo = null;
-
+    private boolean mouseWasIn = false;
     private MouseListener<Window> checkMouse = new MouseCheck();
     private MouseWheelListener<Window> checkWheel = new WheelCheck();
     private TextInputListener<Window> checkInput = new InputCheck();
@@ -23,6 +22,11 @@ public abstract class BaseComponent implements Component {
                 return BaseComponent.this;
             }
         };
+    }
+
+    @Override
+    public void invalidate() {
+        attachedTo.invalidate();
     }
 
     public void setBounds(int x, int y, int w, int h) {
@@ -154,20 +158,43 @@ public abstract class BaseComponent implements Component {
     private class MouseCheck implements MouseListener<Window> {
         @Override
         public void onLeftClick(int x, int y, boolean withShift, Window owner) {
-            if (is(x, y))
+            if (is(x, y)) {
                 requestFocus();
-            controller.onLeftClick(x, y, withShift, owner);
+                controller.onLeftClick(x, y, withShift, owner);
+            }
         }
 
         @Override
         public void onRightClick(int x, int y, boolean withShift, Window owner) {
-            controller.onRightClick(x, y, withShift, owner);
+            if (is(x, y))
+                controller.onRightClick(x, y, withShift, owner);
         }
 
         @Override
         public void onMove(int oldX, int oldY, int newX, int newY, Window owner) {
-            controller.onMove(oldX, oldY, newX, newY, owner);
+            if (is(newX, newY)) {
+                if (!mouseWasIn) {
+                    controller.onMouseEnter(newX, newY, owner);
+                    mouseWasIn = true;
+                }
+                controller.onMove(oldX, oldY, newX, newY, owner);
+            } else if (mouseWasIn) {
+                controller.onMouseLeave(oldX, oldY, owner);
+                mouseWasIn = false;
+            }
         }
+
+        //[[ Never called in window
+        @Override
+        public void onMouseEnter(int newX, int newY, Window owner) {
+            controller.onMouseEnter(newX, newY, owner);
+        }
+
+        @Override
+        public void onMouseLeave(int lastX, int lastY, Window owner) {
+            controller.onMouseLeave(lastX, lastY, owner);
+        }
+        // ]]
     }
 
     private class WheelCheck implements MouseWheelListener<Window> {

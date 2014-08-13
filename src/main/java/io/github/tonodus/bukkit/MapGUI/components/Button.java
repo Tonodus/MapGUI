@@ -1,20 +1,21 @@
 package io.github.tonodus.bukkit.MapGUI.components;
 
-import io.github.tonodus.bukkit.MapGUI.core.BaseComponent;
-
-import java.awt.*;
-
 /**
  * Created by Tonodus (http://tonodus.github.io) on 11.08.2014.
  */
-public class Button extends BaseComponent {
-    @Override
-    public void updateSync() {
+public class Button extends BaseButton {
+    private TextLabel text;
 
+    public Button(TextLabel label) {
+        super(label);
     }
 
-    @Override
-    public void drawAsync(Graphics2D g) {
+    public Button(String text) {
+        this(new TextLabel(text));
+    }
 
+    public void setText(String text) {
+        this.text.setText(text);
+        invalidate();
     }
 }

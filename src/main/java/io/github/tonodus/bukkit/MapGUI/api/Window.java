@@ -27,4 +27,6 @@ public interface Window extends InputListenerController<Window>, Drawable {
      * @hide
      */
     void detachedFrom(MapGUI gui);
+
+    void invalidate();
 }

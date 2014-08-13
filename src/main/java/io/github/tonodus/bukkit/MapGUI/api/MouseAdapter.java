@@ -18,4 +18,14 @@ public class MouseAdapter<O> implements MouseListener<O> {
     public void onMove(int oldX, int oldY, int newX, int newY, O owner) {
 
     }
+
+    @Override
+    public void onMouseEnter(int newX, int newY, O owner) {
+
+    }
+
+    @Override
+    public void onMouseLeave(int lastX, int lastY, O owner) {
+
+    }
 }

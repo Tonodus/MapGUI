@@ -28,6 +28,7 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
         invalidate();
     }
 
+    @Override
     public void invalidate() {
         if (gui != null)
             gui.invalidate();
