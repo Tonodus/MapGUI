@@ -1,3 +1,3 @@
 name: MapGUI
 version: 1.0
-main: io.github.tonodus.bukkit.MapGUI.Test
+main: io.github.tonodus.bukkit.MapGUI.Plugin

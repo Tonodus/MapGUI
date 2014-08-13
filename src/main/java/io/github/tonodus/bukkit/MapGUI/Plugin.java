@@ -3,6 +3,7 @@ package io.github.tonodus.bukkit.MapGUI;
 import io.github.tonodus.bukkit.MapGUI.api.MapGUI;
 import io.github.tonodus.bukkit.MapGUI.core.MapGuiCollection;
 import io.github.tonodus.bukkit.MapGUI.core.WorkerThread;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,11 +15,11 @@ public class Plugin extends JavaPlugin implements Listener {
     private WorkerThread thread;
     private MapGuiCollection collection;
 
-    public static MapGUI registerMapGui(Plugin yourPlugin) {
+    public static MapGUI registerMapGui(Plugin yourPlugin, Player toShow) {
         if (i == null)
             throw new IllegalStateException("MapGui plugin was disabled!");
 
-        return i.collection.registerMapGui(yourPlugin);
+        return i.collection.registerMapGui(yourPlugin, toShow);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class Plugin extends JavaPlugin implements Listener {
 
         thread = new WorkerThread();
         thread.start();
-        collection = new MapGuiCollection();
+        collection = new MapGuiCollection(thread, this);
         collection.onEnable();
     }
 
