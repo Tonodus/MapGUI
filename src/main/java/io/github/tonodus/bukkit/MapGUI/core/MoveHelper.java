@@ -15,7 +15,7 @@ class MoveHelper {
     private final Plugin plugin;
     private final DefaultMapGui gui;
     private final Player player;
-    private final float basePitch = 10;
+    private final float basePitch = 1;
     private float baseYaw;
     private BukkitRunnable resetRunnable = null;
 
