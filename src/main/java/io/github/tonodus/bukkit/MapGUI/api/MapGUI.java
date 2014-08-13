@@ -1,7 +1,6 @@
 package io.github.tonodus.bukkit.MapGUI.api;
 
 import org.bukkit.DyeColor;
-import org.bukkit.entity.Player;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
@@ -46,23 +45,22 @@ public interface MapGUI extends InputListenerController<MapGUI> {
     public void setBackground(DyeColor color);
 
     /**
-     * Shows this gui to the given player.
-     *
-     * @param player the player to display the map to
-     * @param force  whether the player can drop this map or select a other tool (no force)
+     * Shows this gui to the player.
      */
-    public void show(Player player, boolean force);
+    public void show();
 
-    /**
-     * Shows this gui to the given player, but doesn't force it.
-     * See also {@link #show(org.bukkit.entity.Player, boolean) }
-     *
-     * @param player the player to display the map to
-     */
-    public void show(Player player);
 
     /**
      * hides this map from the player
      */
     public void hide();
+
+    /**
+     * Call this to dispose the map and the memory it use, CALL {@link #hide hide} BEFORE!.
+     */
+    public void dispose();
+
+    public void addDropListener(DropListener listener);
+
+    public void removeDropListener(DropListener listener);
 }

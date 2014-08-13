@@ -14,8 +14,7 @@ dependencies {
     compile group: "org.bukkit", name: "bukkit", version: "1.7.9-R0.2"
 }
 
-task bukkit(dependsOn: build, type: Copy) << {
-    from 'build/libs'
+task bukkit(dependsOn: build, type: Copy) {
+    from 'build/libs/MapGUI.jar'
     into 'E:/BukkitDev/plugins'
-    inclue '**/*.jar'
 }

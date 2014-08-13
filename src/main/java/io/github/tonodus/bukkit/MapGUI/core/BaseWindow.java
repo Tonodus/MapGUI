@@ -1,7 +1,5 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
-import io.github.tonodus.bukkit.MapGUI.core.ComponentWindow;
-
 import java.awt.*;
 
 /**
@@ -27,8 +25,8 @@ public class BaseWindow extends ComponentWindow {
      * Override this to draw an image/any other than a color as a background
      */
     @Override
-    protected void drawBackground(Graphics g, int w, int h) {
+    protected void drawBackground(Graphics2D g, int w, int h) {
         g.setColor(background);
-        g.clearRect(0, 0, w, h);
+        g.fillRect(0, 0, w, h);
     }
 }

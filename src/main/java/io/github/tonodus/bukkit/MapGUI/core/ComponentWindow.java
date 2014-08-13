@@ -29,7 +29,8 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
     }
 
     public void invalidate() {
-        gui.invalidate();
+        if (gui != null)
+            gui.invalidate();
     }
 
     public void removeComponent(Component component) {
@@ -53,13 +54,22 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
     }
 
     @Override
-    public void draw(Graphics canvas) {
+    public void updateSync() {
+        for (Component c : cs)
+            c.updateSync();
+    }
+
+    @Override
+    public void drawAsync(Graphics2D canvas) {
         drawBackground(canvas, DefaultMapGui.WIDTH, DefaultMapGui.HEIGHT);
 
-        for (Component c : cs)
-            c.draw(canvas);
+        for (Component c : cs) {
+            canvas.clipRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
+            c.drawAsync(canvas);
+            canvas.setClip(null);
+        }
     }
 
 
-    protected abstract void drawBackground(Graphics g, int width, int height);
+    protected abstract void drawBackground(Graphics2D g, int width, int height);
 }

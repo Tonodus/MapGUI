@@ -16,7 +16,7 @@ public interface Window extends InputListenerController<Window>, Drawable {
      *
      * @param canvas
      */
-    void draw(Graphics canvas);
+    void drawAsync(Graphics2D canvas);
 
     /**
      * @hide

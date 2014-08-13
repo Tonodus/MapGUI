@@ -1,16 +1,12 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
-import io.github.tonodus.bukkit.MapGUI.api.Component;
 import io.github.tonodus.bukkit.MapGUI.api.*;
-import io.github.tonodus.bukkit.MapGUI.api.Window;
-
-import java.awt.*;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 public abstract class BaseComponent implements Component {
-    private int x, y, w, h;
+    private int x = 0, y = 0, w = 0, h = 0;
     private DefaultInputController<Window, Component> controller;
     private boolean hasFocus = false;
 
@@ -43,9 +39,6 @@ public abstract class BaseComponent implements Component {
         setX(x);
         setY(y);
     }
-
-    @Override
-    public abstract void draw(Graphics g);
 
     @Override
     public void onAttachedTo(Window window) {

@@ -1,9 +1,6 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.api.*;
-import io.github.tonodus.bukkit.MapGUI.api.Window;
-
-import java.awt.*;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
@@ -20,9 +17,6 @@ public abstract class InputWindow implements Window {
             }
         };
     }
-
-    @Override
-    public abstract void draw(Graphics canvas);
 
     @Override
     public void attachedOn(MapGUI gui) {

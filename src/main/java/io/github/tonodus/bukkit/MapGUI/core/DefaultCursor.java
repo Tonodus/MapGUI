@@ -9,6 +9,11 @@ class DefaultCursor implements Cursor {
     private int x, y;
     private Type type;
 
+    /*
+        public DefaultCursor() {
+            setSize(10, 10);
+        }
+    */
     @Override
     public int getX() {
         return x;
@@ -29,4 +34,18 @@ class DefaultCursor implements Cursor {
         this.type = newType;
     }
 
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+/*
+    @Override
+    public void updateSync() {
+
+    }
+
+    @Override
+    public void drawAsync(Graphics2D canvas) {
+        canvas.drawOval(x, y, 10, 10);
+    }*/
 }

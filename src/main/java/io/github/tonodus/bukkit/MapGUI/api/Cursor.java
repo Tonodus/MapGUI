@@ -16,6 +16,8 @@ public interface Cursor {
 
     public void setType(Type newType);
 
+    void set(int newX, int newY);
+
     public enum Type {
         NO(100), WHITE_POINTER(0), GREEN_POINTER(1), RED_POINTER(2), BLUE_POINTER(3), WHITE_CROSS(4);
         byte value;
