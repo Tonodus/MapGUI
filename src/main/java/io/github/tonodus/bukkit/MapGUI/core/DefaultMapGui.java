@@ -165,7 +165,6 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     @Override
     public void setWindow(Window window) {
         this.window = window;
-        //((ComponentWindow) window).addComponent(cursor);
         drawHelper.update(window);
     }
 
