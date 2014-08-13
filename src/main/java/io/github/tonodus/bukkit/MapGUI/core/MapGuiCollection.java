@@ -13,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 13.08.2014.
@@ -66,32 +67,32 @@ public class MapGuiCollection {
     private class InternListener implements Listener {
         @EventHandler
         public void move(PlayerMoveEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.moveHelper.onMove(event);
+            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
+                gui.next().moveHelper.onMove(event);
         }
 
         @EventHandler
         public void click(PlayerInteractEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onClick(event);
+            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
+                gui.next().onClick(event);
         }
 
         @EventHandler
         public void scroll(PlayerItemHeldEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onScroll(event);
+            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
+                gui.next().onScroll(event);
         }
 
         @EventHandler
         public void drop(PlayerDropItemEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onDrop(event);
+            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
+                gui.next().onDrop(event);
         }
 
         @EventHandler
         public void quit(PlayerQuitEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onQuit(event);
+            for (Iterator<DefaultMapGui> gui = guis.iterator(); gui.hasNext(); )
+                gui.next().onQuit(event);
         }
     }
 }
