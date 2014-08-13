@@ -1,6 +1,6 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
-import io.github.tonodus.bukkit.MapGUI.Plugin;
+import io.github.tonodus.bukkit.MapGUI.MapGUIPlugin;
 import io.github.tonodus.bukkit.MapGUI.api.DropListener;
 import io.github.tonodus.bukkit.MapGUI.api.MapGUI;
 import org.bukkit.Bukkit;
@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ import java.util.Collection;
  */
 public class MapGuiCollection {
     private WorkerThread w;
-    private Plugin mainPlugin;
+    private MapGUIPlugin mainPlugin;
     private Listener internListener = new InternListener();
 
     private Collection<DefaultMapGui> guis;
@@ -26,7 +27,7 @@ public class MapGuiCollection {
     /**
      * @hide
      */
-    public MapGuiCollection(WorkerThread thread, Plugin mainPlugin) {
+    public MapGuiCollection(WorkerThread thread, MapGUIPlugin mainPlugin) {
         this.w = thread;
         this.mainPlugin = mainPlugin;
         this.guis = new ArrayList<DefaultMapGui>();

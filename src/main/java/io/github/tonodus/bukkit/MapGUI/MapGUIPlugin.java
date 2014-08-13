@@ -10,12 +10,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public class Plugin extends JavaPlugin implements Listener {
-    private static Plugin i;
+public class MapGUIPlugin extends JavaPlugin implements Listener {
+    private static MapGUIPlugin i;
     private WorkerThread thread;
     private MapGuiCollection collection;
 
-    public static MapGUI registerMapGui(Plugin yourPlugin, Player toShow) {
+    public static MapGUI registerMapGui(org.bukkit.plugin.Plugin yourPlugin, Player toShow) {
         if (i == null)
             throw new IllegalStateException("MapGui plugin was disabled!");
 
