@@ -16,5 +16,6 @@ public class YawPitchLabel extends TextLabel {
     @Override
     public void updateSync() {
         setText("Y: " + toWatch.getLocation().getYaw() + "|P: " + toWatch.getLocation().getPitch());
+        calcPreferredSizeNextFrame();
     }
 }
