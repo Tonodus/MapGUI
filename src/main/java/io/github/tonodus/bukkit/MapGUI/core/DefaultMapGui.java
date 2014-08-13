@@ -8,6 +8,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapRenderer;
@@ -91,6 +92,9 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         if (visible)
             throw new IllegalStateException("Must hide before dispose gui!");
 
+        for (DropListener listener : dropListeners)
+            listener.onDispose(this);
+
         if (window != null)
             window.detachedFrom(this);
 
@@ -115,6 +119,16 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         this.showTo.setItemInHand(itemBefore);
         this.itemBefore = null;
         this.moveHelper.stop();
+    }
+
+    public void onQuit(PlayerQuitEvent event) {
+        if (event.getPlayer() != showTo)
+            return;
+
+        if (visible)
+            hide();
+
+        dispose();
     }
 
     public void onScroll(PlayerItemHeldEvent event) {
@@ -143,7 +157,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
 
         if (!result) {
             for (DropListener listener : dropListeners)
-                listener.onDispose(this, p);
+                listener.onPreDispose(this, p);
 
             hide();
             dispose();
@@ -235,6 +249,5 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     public Player assignedPlayer() {
         return showTo;
     }
-
 
 }

@@ -8,10 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +49,12 @@ public class MapGuiCollection {
             }
 
             @Override
-            public void onDispose(MapGUI me, Player player) {
+            public void onPreDispose(MapGUI me, Player player) {
+
+            }
+
+            @Override
+            public void onDispose(MapGUI me) {
                 guis.remove(me);
             }
         });
@@ -83,6 +85,12 @@ public class MapGuiCollection {
         public void drop(PlayerDropItemEvent event) {
             for (DefaultMapGui gui : guis)
                 gui.onDrop(event);
+        }
+
+        @EventHandler
+        public void quit(PlayerQuitEvent event) {
+            for (DefaultMapGui gui : guis)
+                gui.onQuit(event);
         }
     }
 }

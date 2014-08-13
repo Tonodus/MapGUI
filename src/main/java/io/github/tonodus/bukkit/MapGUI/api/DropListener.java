@@ -17,11 +17,14 @@ public interface DropListener {
 
     /**
      * Called when a player drops the map and so the map-gui, and it is definitely sure, that the map will be disposed.
+     * This is also called, when the player lefts the game.
      * <p/>
      * This will be called, right before the map will be hidden and disposed
      *
      * @param me     the map-gui
      * @param player the player
      */
-    void onDispose(MapGUI me, Player player);
+    void onPreDispose(MapGUI me, Player player);
+
+    void onDispose(MapGUI me);
 }
