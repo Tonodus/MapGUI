@@ -1,6 +1,10 @@
 apply plugin: "java"
 apply plugin: "maven"
 apply plugin: "idea"
+apply plugin: "maven-publish"
+
+group = 'io.github.tonodus.bukkit.MapGUI'
+version = '1.0.0'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -17,4 +21,15 @@ dependencies {
 task bukkit(dependsOn: build, type: Copy) {
     from 'build/libs/MapGUI.jar'
     into 'E:/BukkitDev/plugins'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
