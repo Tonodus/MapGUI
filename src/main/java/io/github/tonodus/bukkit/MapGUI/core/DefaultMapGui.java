@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapCursor;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
@@ -64,8 +65,10 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
 
         if (mapCanvas.getCursors().size() < 1)
             mapCanvas.getCursors().addCursor(0, 0, (byte) 6);
-        mapCanvas.getCursors().getCursor(0).setX(cursor.getMapX());
-        mapCanvas.getCursors().getCursor(0).setY(cursor.getMapY());
+        MapCursor c = mapCanvas.getCursors().getCursor(0);
+        cursor.getType().applyOn(c);
+        c.setX(cursor.getMapX());
+        c.setY(cursor.getMapY());
     }
 
     private ItemStack toItemStack() {

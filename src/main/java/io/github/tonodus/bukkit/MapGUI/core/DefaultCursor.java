@@ -8,7 +8,7 @@ import io.github.tonodus.bukkit.MapGUI.api.Cursor;
 class DefaultCursor implements Cursor {
     byte mx, my;
     private int x, y;
-    private Type type;
+    private CursorType type = CursorType.WHITE_POINTER;
 
     @Override
     public int getX() {
@@ -21,12 +21,12 @@ class DefaultCursor implements Cursor {
     }
 
     @Override
-    public Type getType() {
+    public CursorType getType() {
         return type;
     }
 
     @Override
-    public void setType(Type newType) {
+    public void setType(CursorType newType) {
         this.type = newType;
     }
 

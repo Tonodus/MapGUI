@@ -4,6 +4,8 @@ package io.github.tonodus.bukkit.MapGUI.api;
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 
+import org.bukkit.map.MapCursor;
+
 /**
  * A cursor on a {@link MapGUI MapGUI} that the player can move with his mouse
  */
@@ -12,18 +14,30 @@ public interface Cursor {
 
     public int getY();
 
-    public Type getType();
+    public CursorType getType();
 
-    public void setType(Type newType);
+    public void setType(CursorType newType);
 
     void set(int newX, int newY);
 
-    public enum Type {
-        NO(100), WHITE_POINTER(0), GREEN_POINTER(1), RED_POINTER(2), BLUE_POINTER(3), WHITE_CROSS(4);
-        byte value;
+    public enum CursorType {
+        NO(null), WHITE_POINTER(MapCursor.Type.WHITE_POINTER), GREEN_POINTER(MapCursor.Type.GREEN_POINTER),
+        RED_POINTER(MapCursor.Type.RED_POINTER), BLUE_POINTER(MapCursor.Type.BLUE_POINTER), WHITE_CROSS(MapCursor.Type.WHITE_CROSS);
+        private MapCursor.Type value;
 
-        Type(int v) {
-            this.value = (byte) v;
+        private CursorType(MapCursor.Type v) {
+            this.value = v;
+        }
+
+        public void applyOn(MapCursor cursor) {
+            switch (this) {
+                case NO:
+                    cursor.setVisible(false);
+                    break;
+                default:
+                    cursor.setVisible(true);
+                    cursor.setType(this.value);
+            }
         }
     }
 }
