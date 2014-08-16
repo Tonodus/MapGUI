@@ -2,7 +2,6 @@ package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.api.Component;
 import io.github.tonodus.bukkit.MapGUI.api.*;
-import io.github.tonodus.bukkit.MapGUI.api.Window;
 
 import java.awt.*;
 
@@ -10,39 +9,34 @@ import java.awt.*;
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 public abstract class BaseComponent implements Component {
-    protected Window attachedTo = null;
+    protected ComponentsContainer attachedTo = null;
     private int x = 0, y = 0, w = 0, h = 0;
-    private DefaultInputController<Window, Component> controller;
+    private DefaultInputController controller;
     private boolean hasFocus = false;
     private boolean mouseWasIn = false;
-    private MouseListener<Window> checkMouse = new MouseCheck();
-    private MouseWheelListener<Window> checkWheel = new WheelCheck();
-    private TextInputListener<Window> checkInput = new InputCheck();
+    private MouseListener checkMouse = new MouseCheck();
+    private MouseWheelListener checkWheel = new WheelCheck();
+    private TextInputListener checkInput = new InputCheck();
 
     public BaseComponent() {
-        controller = new DefaultInputController<Window, Component>() {
-            @Override
-            protected Component convert(Window input) {
-                return BaseComponent.this;
-            }
-        };
+        controller = new DefaultInputController();
     }
 
 
     @Override
-    public void onAttachedTo(Window window) {
-        this.attachedTo = window;
-        window.addMouseListener(checkMouse);
-        window.addInputListener(checkInput);
-        window.addScrollListener(checkWheel);
+    public void onAttachedTo(ComponentsContainer container) {
+        this.attachedTo = container;
+        container.addMouseListener(checkMouse);
+        container.addInputListener(checkInput);
+        container.addScrollListener(checkWheel);
     }
 
     @Override
-    public void onDetachedFrom(Window window) {
+    public void onDetachedFrom(ComponentsContainer container) {
         this.attachedTo = null;
-        window.removeMouseListener(checkMouse);
-        window.removeInputListener(checkInput);
-        window.removeScrollListener(checkWheel);
+        container.removeMouseListener(checkMouse);
+        container.removeInputListener(checkInput);
+        container.removeScrollListener(checkWheel);
     }
 
     private boolean is(int x, int y) {
@@ -54,8 +48,8 @@ public abstract class BaseComponent implements Component {
 
     @Override
     public boolean requestFocus() {
-        if (attachedTo instanceof FocusWindow) {
-            ((FocusWindow) attachedTo).setFocused(this);
+        if (attachedTo instanceof FocusHolder) {
+            ((FocusHolder) attachedTo).setFocused(this);
             return true;
         }
         return false;
@@ -140,88 +134,88 @@ public abstract class BaseComponent implements Component {
     }
 
     @Override
-    public void addMouseListener(MouseListener<Component> listener) {
+    public void addMouseListener(MouseListener listener) {
         controller.addMouseListener(listener);
     }
 
     @Override
-    public void addScrollListener(MouseWheelListener<Component> listener) {
+    public void addScrollListener(MouseWheelListener listener) {
         controller.addScrollListener(listener);
     }
 
     @Override
-    public void addInputListener(TextInputListener<Component> listener) {
+    public void addInputListener(TextInputListener listener) {
         controller.addInputListener(listener);
     }
 
     @Override
-    public void removeMouseListener(MouseListener<Component> listener) {
+    public void removeMouseListener(MouseListener listener) {
         controller.removeMouseListener(listener);
     }
 
     @Override
-    public void removeScrollListener(MouseWheelListener<Component> listener) {
+    public void removeScrollListener(MouseWheelListener listener) {
         controller.removeScrollListener(listener);
     }
 
     @Override
-    public void removeInputListener(TextInputListener<Component> listener) {
+    public void removeInputListener(TextInputListener listener) {
         controller.removeInputListener(listener);
     }
 
-    private class MouseCheck implements MouseListener<Window> {
+    private class MouseCheck implements MouseListener {
         @Override
-        public void onLeftClick(int x, int y, boolean withShift, Window owner) {
+        public void onLeftClick(int x, int y, boolean withShift) {
             if (is(x, y)) {
                 requestFocus();
-                controller.onLeftClick(x, y, withShift, owner);
+                controller.onLeftClick(x, y, withShift);
             }
         }
 
         @Override
-        public void onRightClick(int x, int y, boolean withShift, Window owner) {
+        public void onRightClick(int x, int y, boolean withShift) {
             if (is(x, y))
-                controller.onRightClick(x, y, withShift, owner);
+                controller.onRightClick(x, y, withShift);
         }
 
         @Override
-        public void onMove(int oldX, int oldY, int newX, int newY, Window owner) {
+        public void onMove(int oldX, int oldY, int newX, int newY) {
             if (is(newX, newY)) {
                 if (!mouseWasIn) {
-                    controller.onMouseEnter(newX, newY, owner);
+                    controller.onMouseEnter(newX, newY);
                     mouseWasIn = true;
                 }
-                controller.onMove(oldX, oldY, newX, newY, owner);
+                controller.onMove(oldX, oldY, newX, newY);
             } else if (mouseWasIn) {
-                controller.onMouseLeave(oldX, oldY, owner);
+                controller.onMouseLeave(oldX, oldY);
                 mouseWasIn = false;
             }
         }
 
-        //[[ Never called in window
+        //[[ Never called in ComponentsContainer
         @Override
-        public void onMouseEnter(int newX, int newY, Window owner) {
-            controller.onMouseEnter(newX, newY, owner);
+        public void onMouseEnter(int newX, int newY) {
+            controller.onMouseEnter(newX, newY);
         }
 
         @Override
-        public void onMouseLeave(int lastX, int lastY, Window owner) {
-            controller.onMouseLeave(lastX, lastY, owner);
+        public void onMouseLeave(int lastX, int lastY) {
+            controller.onMouseLeave(lastX, lastY);
         }
         // ]]
     }
 
-    private class WheelCheck implements MouseWheelListener<Window> {
+    private class WheelCheck implements MouseWheelListener {
         @Override
-        public void onMouseWheel(int amount, Window owner) {
-            controller.onMouseWheel(amount, owner);
+        public void onMouseWheel(int amount) {
+            controller.onMouseWheel(amount);
         }
     }
 
-    private class InputCheck implements TextInputListener<Window> {
+    private class InputCheck implements TextInputListener {
         @Override
-        public void onTextInput(String text, Window owner) {
-            controller.onTextInput(text, owner);
+        public void onTextInput(String text) {
+            controller.onTextInput(text);
         }
     }
 }

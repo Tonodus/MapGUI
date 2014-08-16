@@ -30,9 +30,9 @@ public interface Component extends InputListenerController<Component>, SizelessD
 
     void onFocus();
 
-    void onAttachedTo(Window window);
+    void onAttachedTo(ComponentsContainer container);
 
-    void onDetachedFrom(Window window);
+    void onDetachedFrom(ComponentsContainer container);
 
     boolean requestFocus();
 

@@ -2,28 +2,40 @@ package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.api.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
- * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
+ * Created by Tonodus (http://tonodus.github.io) on 16.08.2014.
  */
-public abstract class InputWindow implements Window {
+public abstract class AbstractComponentsContainer extends BaseComponent implements ComponentsContainer {
+    private Collection<Component> components;
     private DefaultInputController controller;
 
-    public InputWindow() {
+    public AbstractComponentsContainer() {
+        components = new ArrayList<Component>();
         controller = new DefaultInputController();
     }
 
     @Override
-    public void attachedOn(MapGUI gui) {
-        gui.addInputListener(controller);
-        gui.addMouseListener(controller);
-        gui.addScrollListener(controller);
+    public void addComponent(Component... components) {
+        for (Component c : components)
+            addComponent(c);
     }
 
     @Override
-    public void detachedFrom(MapGUI gui) {
-        gui.removeInputListener(controller);
-        gui.removeScrollListener(controller);
-        gui.removeMouseListener(controller);
+    public Iterable<Component> getComponents() {
+        return components;
+    }
+
+    @Override
+    public void addComponent(Component component) {
+        components.add(component);
+    }
+
+    @Override
+    public void removeComponent(Component component) {
+        components.remove(component);
     }
 
     @Override

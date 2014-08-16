@@ -1,7 +1,6 @@
 package io.github.tonodus.bukkit.MapGUI.components;
 
 import io.github.tonodus.bukkit.MapGUI.api.Component;
-import io.github.tonodus.bukkit.MapGUI.api.ComponentContainer;
 import io.github.tonodus.bukkit.MapGUI.api.Drawable;
 import io.github.tonodus.bukkit.MapGUI.core.BaseComponent;
 import io.github.tonodus.bukkit.MapGUI.drawable.ColorDrawable;
@@ -11,7 +10,7 @@ import java.awt.*;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 11.08.2014.
  */
-public class Panel extends BaseComponent implements ComponentContainer {
+public class Panel extends BaseComponent {
     private Component content;
     private Drawable background = new ColorDrawable(new Color(0, 0, 0, 255));
     private boolean centerContent = true;
@@ -93,15 +92,5 @@ public class Panel extends BaseComponent implements ComponentContainer {
 
     public void setContent(Component content) {
         this.content = content;
-    }
-
-    @Override
-    public void addComponent(Component component) {
-        setContent(component);
-    }
-
-    @Override
-    public void removeComponent(Component component) {
-        setContent(null);
     }
 }
