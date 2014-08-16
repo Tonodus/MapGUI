@@ -30,7 +30,7 @@ public class BaseButton extends Panel {
     }
 
     protected Drawable[] getDefaultBackgrounds() {
-        return new Drawable[]{new ColorDrawable(new Color(179, 179, 179)),
+        return new Drawable[]{new ColorDrawable(new Color(229, 229, 229)),
                 new ColorDrawable(new Color(164, 164, 205)),
                 new ColorDrawable(new Color(102, 102, 134))};
     }
@@ -60,9 +60,9 @@ public class BaseButton extends Panel {
         }
 
         canvas.setColor(out);
-        canvas.drawRect(getX(), getY(), getWidth(), getHeight());
+        canvas.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         canvas.setColor(in);
-        canvas.drawRect(getX() + 2, getY() + 2, getWidth() - 2, getHeight() - 2);
+        canvas.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
     }
 
     @Override
