@@ -38,6 +38,11 @@ public class MapGuiCollection {
     }
 
     public void onDisable() {
+        for (DefaultMapGui gui : guis) {
+            if (gui.isVisible())
+                gui.hide();
+            gui.dispose();
+        }
         HandlerList.unregisterAll(internListener);
     }
 
