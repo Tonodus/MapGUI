@@ -19,7 +19,7 @@ dependencies {
 }
 
 task bukkit(dependsOn: build, type: Copy) {
-    from 'build/libs/MapGUI.jar'
+    from 'build/libs/MapGUI-1.0.0.jar'
     into 'E:/BukkitDev/plugins'
 }
 
