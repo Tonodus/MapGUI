@@ -2,6 +2,7 @@ package io.github.tonodus.bukkit.MapGUI.core;
 
 
 import io.github.tonodus.bukkit.MapGUI.api.Component;
+import io.github.tonodus.bukkit.MapGUI.api.ComponentsContainer;
 import io.github.tonodus.bukkit.MapGUI.api.FocusWindow;
 import io.github.tonodus.bukkit.MapGUI.api.MapGUI;
 
@@ -12,7 +13,7 @@ import java.util.Collection;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public abstract class ComponentWindow extends InputWindow implements FocusWindow {
+public abstract class ComponentWindow extends InputWindow implements ComponentsContainer, FocusWindow {
     private Collection<Component> cs;
     private MapGUI gui;
 
@@ -20,6 +21,11 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
 
     public ComponentWindow() {
         this.cs = new ArrayList<Component>();
+    }
+
+    public void addComponent(Component... components) {
+        for (Component c : components)
+            addComponent(c);
     }
 
     public void addComponent(Component component) {
