@@ -63,7 +63,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         drawHelper.onRenderTick(mapCanvas);
 
         if (mapCanvas.getCursors().size() < 1)
-            mapCanvas.getCursors().addCursor(0, 0, (byte) 0);
+            mapCanvas.getCursors().addCursor(0, 0, (byte) 6);
         mapCanvas.getCursors().getCursor(0).setX(cursor.getMapX());
         mapCanvas.getCursors().getCursor(0).setY(cursor.getMapY());
     }
