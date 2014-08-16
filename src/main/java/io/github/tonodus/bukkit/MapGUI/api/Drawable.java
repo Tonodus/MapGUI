@@ -8,5 +8,5 @@ import java.awt.*;
 public interface Drawable {
     public void updateSync();
 
-    public void drawAsync(Graphics2D canvas);
+    public void drawAsync(Graphics2D canvas, int width, int height);
 }

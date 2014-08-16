@@ -2,6 +2,7 @@ package io.github.tonodus.bukkit.MapGUI.components;
 
 import io.github.tonodus.bukkit.MapGUI.api.Drawable;
 import io.github.tonodus.bukkit.MapGUI.core.BaseComponent;
+import io.github.tonodus.bukkit.MapGUI.drawable.ColorDrawable;
 
 import java.awt.*;
 
@@ -10,36 +11,43 @@ import java.awt.*;
  */
 public class Panel extends BaseComponent {
     private Drawable content;
-    private Color background = new Color(0, 0, 0, 255);
+    private Drawable background = new ColorDrawable(new Color(0, 0, 0, 255));
 
+    public Panel(Drawable content) {
+        this.content = content;
+    }
 
-    public Panel(Drawable drawable) {
-        this.content = drawable;
+    public void setBackground(Drawable background) {
+        this.background = background;
     }
 
     public void setBackground(Color color) {
-        this.background = color;
+        this.background = new ColorDrawable(color);
+    }
+
+    public void setContent(Drawable content) {
+        this.content = content;
     }
 
     @Override
     public void drawAsync(Graphics2D g) {
         g.translate(getX(), getY());
-        drawBgAsync(g);
-        drawCAsync(g);
+        drawBackgroundAsync(g);
+        drawContentAsync(g);
         g.translate(-getX(), -getY());
     }
 
-    protected void drawBgAsync(Graphics2D g) {
-        g.setColor(background);
-        g.fillRect(getX(), getY(), getWidth(), getHeight());
+    protected void drawBackgroundAsync(Graphics2D g) {
+        background.drawAsync(g, getWidth(), getHeight());
     }
 
-    protected void drawCAsync(Graphics2D g) {
-        content.drawAsync(g);
+    protected void drawContentAsync(Graphics2D g) {
+        content.drawAsync(g, getWidth(), getHeight());
     }
 
     @Override
     public void updateSync() {
         content.updateSync();
+        background.updateSync();
     }
 }

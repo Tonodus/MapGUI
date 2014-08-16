@@ -1,6 +1,10 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
+import io.github.tonodus.bukkit.MapGUI.api.Component;
 import io.github.tonodus.bukkit.MapGUI.api.*;
+import io.github.tonodus.bukkit.MapGUI.api.Window;
+
+import java.awt.*;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
@@ -24,25 +28,6 @@ public abstract class BaseComponent implements Component {
         };
     }
 
-    @Override
-    public void invalidate() {
-        attachedTo.invalidate();
-    }
-
-    public void setBounds(int x, int y, int w, int h) {
-        setPosition(x, y);
-        setSize(w, h);
-    }
-
-    public void setSize(int w, int h) {
-        setWidth(w);
-        setHeight(h);
-    }
-
-    public void setPosition(int x, int y) {
-        setX(x);
-        setY(y);
-    }
 
     @Override
     public void onAttachedTo(Window window) {
@@ -74,6 +59,34 @@ public abstract class BaseComponent implements Component {
             return true;
         }
         return false;
+    }
+
+    /*=============================================================================
+
+    ============================================================================== */
+    @Override
+    public void invalidate() {
+        attachedTo.invalidate();
+    }
+
+    @Override
+    public void drawAsync(Graphics2D g, int w, int h) {
+        drawAsync(g);
+    }
+
+    public void setBounds(int x, int y, int w, int h) {
+        setPosition(x, y);
+        setSize(w, h);
+    }
+
+    public void setSize(int w, int h) {
+        setWidth(w);
+        setHeight(h);
+    }
+
+    public void setPosition(int x, int y) {
+        setX(x);
+        setY(y);
     }
 
     @Override

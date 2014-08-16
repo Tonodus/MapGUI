@@ -29,6 +29,18 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
     }
 
     @Override
+    public void attachedOn(MapGUI gui) {
+        super.attachedOn(gui);
+        this.gui = gui;
+    }
+
+    @Override
+    public void detachedFrom(MapGUI gui) {
+        super.detachedFrom(gui);
+        this.gui = gui;
+    }
+
+    @Override
     public void invalidate() {
         if (gui != null)
             gui.invalidate();
@@ -46,7 +58,8 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
 
     @Override
     public void setFocused(Component on) {
-        this.focused.onLostFocus();
+        if (this.focused != null)
+            this.focused.onLostFocus();
         this.focused = on;
         if (this.focused != null)
             this.focused.onFocus();
@@ -58,6 +71,11 @@ public abstract class ComponentWindow extends InputWindow implements FocusWindow
     public void updateSync() {
         for (Component c : cs)
             c.updateSync();
+    }
+
+    @Override
+    public void drawAsync(Graphics2D g, int w, int h) {
+        drawAsync(g);
     }
 
     @Override

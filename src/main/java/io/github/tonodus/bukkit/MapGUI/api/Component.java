@@ -3,7 +3,7 @@ package io.github.tonodus.bukkit.MapGUI.api;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public interface Component extends InputListenerController<Component>, Drawable {
+public interface Component extends InputListenerController<Component>, SizelessDrawable {
     public int getX();
 
     public void setX(int x);

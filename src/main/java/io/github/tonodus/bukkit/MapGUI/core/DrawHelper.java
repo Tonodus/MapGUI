@@ -31,6 +31,8 @@ class DrawHelper {
             finishedAsync = true;
         }
     };
+    private int fps = 0;
+    private long lastFpsSecond = -1;
     private volatile boolean finishedWindowChange = true;
     private volatile boolean needSend = false;
 
@@ -77,14 +79,25 @@ class DrawHelper {
     private void drawWindow() {
         if (!needRedraw || !finishedAsync || !finishedWindowChange || window == null)
             return;
+        needRedraw = false;
 
         window.updateSync();
         finishedAsync = false;
         worker.addToQueue(drawRunnable);
-        needRedraw = false;
     }
 
     public void onRenderTick(MapCanvas canvas) {
+       /* //fps
+        if (lastFpsSecond == -1)
+            lastFpsSecond = System.currentTimeMillis();
+        if (System.currentTimeMillis() - lastFpsSecond >= 1000) {
+            lastFpsSecond -= 1000;
+            System.out.println("FPS: " + fps);
+            fps = 0;
+        }
+        fps++;
+        //end fps*/
+
         drawWindow();
 
         if (this.canvas != canvas)

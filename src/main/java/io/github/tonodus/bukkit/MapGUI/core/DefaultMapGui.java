@@ -64,8 +64,8 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
 
         if (mapCanvas.getCursors().size() < 1)
             mapCanvas.getCursors().addCursor(0, 0, (byte) 0);
-        mapCanvas.getCursors().getCursor(0).setX((byte) cursor.getX());
-        mapCanvas.getCursors().getCursor(0).setY((byte) cursor.getY());
+        mapCanvas.getCursors().getCursor(0).setX(cursor.getMapX());
+        mapCanvas.getCursors().getCursor(0).setY(cursor.getMapY());
     }
 
     private ItemStack toItemStack() {
@@ -190,7 +190,10 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
 
     @Override
     public void setWindow(Window window) {
+        if (this.window != null)
+            this.window.detachedFrom(this);
         this.window = window;
+        this.window.attachedOn(this);
         drawHelper.update(window);
     }
 

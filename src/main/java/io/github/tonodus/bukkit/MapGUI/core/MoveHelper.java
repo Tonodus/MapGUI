@@ -11,13 +11,15 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Created by Tonodus (http://tonodus.github.io) on 13.08.2014.
  */
 class MoveHelper {
-    private static final int UNKNOWN = -Integer.MIN_VALUE;
+    private static final int UNKNOWN = Integer.MIN_VALUE;
+    private float baseYaw = UNKNOWN;
     private final Plugin plugin;
     private final DefaultMapGui gui;
     private final Player player;
-    private final float basePitch = 1;
-    private float baseYaw;
+    private final float basePitch = 50;
     private BukkitRunnable resetRunnable = null;
+
+    private boolean resetView = true;
 
     public MoveHelper(Plugin plugin, DefaultMapGui gui) {
         this.plugin = plugin;
@@ -79,20 +81,24 @@ class MoveHelper {
 
         Cursor c = gui.getCursor();
         int ox = c.getX(), oy = c.getY();
-        int nx = Math.round(Math.max(-128, Math.min(127, ox + yaw))), ny = Math.round(Math.max(-128, Math.min(127, oy + pitch)));
+        int nx = Math.round(Math.max(0, Math.min(127, ox + yaw))), ny = Math.round(Math.max(0, Math.min(127, oy + pitch)));
         c.set(nx, ny);
         gui.inputController.onMove(ox, oy, nx, ny, gui);
 
         if (baseYaw == UNKNOWN)
             baseYaw = event.getFrom().getYaw();
 
-        gui.invalidate();
+        resetView = true;
     }
 
     private void resetView() {
+        if (!resetView)
+            return;
+
         Location l = player.getLocation();
         l.setYaw(baseYaw);
         l.setPitch(basePitch);
         player.teleport(l);
+        resetView = false;
     }
 }
