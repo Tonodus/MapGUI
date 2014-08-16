@@ -89,9 +89,10 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
         drawBackground(canvas, DefaultMapGui.WIDTH, DefaultMapGui.HEIGHT);
 
         for (Component c : cs) {
+            Shape s = canvas.getClip();
             canvas.clipRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
             c.drawAsync(canvas);
-            canvas.setClip(null);
+            canvas.setClip(s);
         }
     }
 
