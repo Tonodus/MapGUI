@@ -1,6 +1,7 @@
 package io.github.tonodus.bukkit.MapGUI.components;
 
 import io.github.tonodus.bukkit.MapGUI.api.Component;
+import io.github.tonodus.bukkit.MapGUI.api.ComponentContainer;
 import io.github.tonodus.bukkit.MapGUI.api.Drawable;
 import io.github.tonodus.bukkit.MapGUI.core.BaseComponent;
 import io.github.tonodus.bukkit.MapGUI.drawable.ColorDrawable;
@@ -10,7 +11,7 @@ import java.awt.*;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 11.08.2014.
  */
-public class Panel extends BaseComponent {
+public class Panel extends BaseComponent implements ComponentContainer {
     private Component content;
     private Drawable background = new ColorDrawable(new Color(0, 0, 0, 255));
     private boolean centerContent = true;
@@ -23,14 +24,15 @@ public class Panel extends BaseComponent {
     public void drawAsync(Graphics2D g) {
         drawBackgroundAsync(g);
 
-        if (centerContent) {
-            int px = Math.round((getWidth() - content.getWidth()) / 2);
-            int py = Math.round((getHeight() - content.getHeight()) / 2);
-            g.translate(px, py);
-            drawContentAsync(g);
-            g.translate(-px, -py);
-        } else
-            drawContentAsync(g);
+        if (content != null)
+            if (centerContent) {
+                int px = Math.round((getWidth() - content.getWidth()) / 2);
+                int py = Math.round((getHeight() - content.getHeight()) / 2);
+                g.translate(px, py);
+                drawContentAsync(g);
+                g.translate(-px, -py);
+            } else
+                drawContentAsync(g);
     }
 
 
@@ -43,23 +45,24 @@ public class Panel extends BaseComponent {
 
     @Override
     public void setX(int x) {
-        Component c = getContent();
-        c.setX(c.getX() + x - getX());
+        if (content != null)
+            content.setX(content.getX() + x - getX());
 
         super.setX(x);
     }
 
     @Override
     public void setY(int y) {
-        Component c = getContent();
-        c.setY(c.getY() + y - getY());
+        if (content != null)
+            content.setY(content.getY() + y - getY());
 
         super.setY(y);
     }
 
     @Override
     public void updateSync() {
-        content.updateSync();
+        if (content != null)
+            content.updateSync();
         background.updateSync();
     }
 
@@ -90,5 +93,15 @@ public class Panel extends BaseComponent {
 
     public void setContent(Component content) {
         this.content = content;
+    }
+
+    @Override
+    public void addComponent(Component component) {
+        setContent(component);
+    }
+
+    @Override
+    public void removeComponent(Component component) {
+        setContent(null);
     }
 }
