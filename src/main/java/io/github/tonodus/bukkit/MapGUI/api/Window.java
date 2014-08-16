@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * Can be displayed on a {@link MapGUI MapGUI}
  */
-public interface Window extends InputListenerController<Window>, Drawable {
+public interface Window extends InputListenerController, Drawable {
     /**
      * Called whenever the window need to redraw itself and it's content.
      * If you want the window to redraw itself, call {@link MapGUI#invalidate() invalidata() on the MapGUI}

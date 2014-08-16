@@ -9,7 +9,7 @@ import org.bukkit.DyeColor;
 /**
  * The base interface
  */
-public interface MapGUI extends InputListenerController<MapGUI> {
+public interface MapGUI extends InputListenerController {
     /**
      * Sets the current displayed {@link Window window}
      *

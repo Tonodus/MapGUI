@@ -83,7 +83,7 @@ class MoveHelper {
         int ox = c.getX(), oy = c.getY();
         int nx = Math.round(Math.max(0, Math.min(127, ox + yaw))), ny = Math.round(Math.max(0, Math.min(127, oy + pitch)));
         c.set(nx, ny);
-        gui.inputController.onMove(ox, oy, nx, ny, gui);
+        gui.inputController.onMove(ox, oy, nx, ny);
 
         if (baseYaw == UNKNOWN)
             baseYaw = event.getFrom().getYaw();

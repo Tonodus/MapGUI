@@ -26,7 +26,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     public static final MapItemGetter defaultGetter = new DefaultMapGetter();
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
-    DefaultInputController<MapGUI, MapGUI> inputController;
+    DefaultInputController inputController;
     MoveHelper moveHelper;
     private Window window;
     private DefaultCursor cursor;
@@ -48,7 +48,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         this.window = null;
         this.cursor = new DefaultCursor();
         this.plugin = plugin;
-        this.inputController = new SameInputController<MapGUI>();
+        this.inputController = new DefaultInputController();
         this.mapGetter = getter;
         this.drawHelper = new DrawHelper(WIDTH, HEIGHT, worker, player);
         this.moveHelper = new MoveHelper(plugin, this);
@@ -150,7 +150,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         if (Math.abs(event.getPreviousSlot() - event.getNewSlot()) > 1)
             return;
 
-        inputController.onMouseWheel(1, this);
+        inputController.onMouseWheel(1);
     }
 
     public void onDrop(PlayerDropItemEvent event) {
@@ -186,9 +186,9 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         event.setCancelled(true);
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR)
-            inputController.onLeftClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking(), this);
+            inputController.onLeftClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking());
         else if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)
-            inputController.onRightClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking(), this);
+            inputController.onRightClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking());
     }
 
     @Override
@@ -221,32 +221,32 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     }
 
     @Override
-    public void addMouseListener(MouseListener<MapGUI> listener) {
+    public void addMouseListener(MouseListener listener) {
         inputController.addMouseListener(listener);
     }
 
     @Override
-    public void addScrollListener(MouseWheelListener<MapGUI> listener) {
+    public void addScrollListener(MouseWheelListener listener) {
         inputController.addScrollListener(listener);
     }
 
     @Override
-    public void addInputListener(TextInputListener<MapGUI> listener) {
+    public void addInputListener(TextInputListener listener) {
         inputController.addInputListener(listener);
     }
 
     @Override
-    public void removeMouseListener(MouseListener<MapGUI> listener) {
+    public void removeMouseListener(MouseListener listener) {
         inputController.removeMouseListener(listener);
     }
 
     @Override
-    public void removeScrollListener(MouseWheelListener<MapGUI> listener) {
+    public void removeScrollListener(MouseWheelListener listener) {
         inputController.removeScrollListener(listener);
     }
 
     @Override
-    public void removeInputListener(TextInputListener<MapGUI> listener) {
+    public void removeInputListener(TextInputListener listener) {
         inputController.removeInputListener(listener);
     }
 

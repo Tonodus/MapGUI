@@ -103,16 +103,16 @@ public class BaseButton extends Panel {
         NORMAL, HOVERING, CLICKING;
     }
 
-    private class InternMouseListener extends MouseAdapter<Component> {
+    private class InternMouseListener extends MouseAdapter {
         @Override
-        public void onLeftClick(int x, int y, boolean withShift, Component owner) {
+        public void onLeftClick(int x, int y, boolean withShift) {
             state = ButtonState.CLICKING;
             downTime = System.currentTimeMillis();
             invalidate();
         }
 
         @Override
-        public void onMouseEnter(int newX, int newY, Component owner) {
+        public void onMouseEnter(int newX, int newY) {
             if (state == ButtonState.NORMAL)
                 state = ButtonState.HOVERING;
             hovering = true;
@@ -120,7 +120,7 @@ public class BaseButton extends Panel {
         }
 
         @Override
-        public void onMouseLeave(int lastX, int lastY, Component owner) {
+        public void onMouseLeave(int lastX, int lastY) {
             if (state == ButtonState.HOVERING)
                 state = ButtonState.NORMAL;
             hovering = false;
