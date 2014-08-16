@@ -66,7 +66,8 @@ public abstract class BaseComponent implements Component {
     ============================================================================== */
     @Override
     public void invalidate() {
-        attachedTo.invalidate();
+        if (attachedTo != null)
+            attachedTo.invalidate();
     }
 
     @Override
