@@ -40,6 +40,8 @@ public class TextLabel extends BaseComponent {
         if (hasCalc) {
             setWidth((int) (r.getWidth() + 0.5));
             setHeight((int) (r.getHeight() + 0.5));
+            hasCalc = false;
+            invalidate();
         }
 
         g.setColor(Color.BLACK);

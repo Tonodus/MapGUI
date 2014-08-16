@@ -12,6 +12,7 @@ public class Button extends BaseButton {
 
     public Button(String text) {
         this(new TextLabel(text));
+        ((TextLabel) super.getContent()).calcPreferredSizeNextFrame();
     }
 
     public void setText(String text) {

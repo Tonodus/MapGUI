@@ -18,7 +18,7 @@ public class BaseButton extends Panel {
 
     private boolean hovering = false;
 
-    public BaseButton(Drawable content) {
+    public BaseButton(Component content) {
         super(content);
         this.backgrounds = getDefaultBackgrounds();
         this.clickDownTime = getClickDownTime();
@@ -60,9 +60,9 @@ public class BaseButton extends Panel {
         }
 
         canvas.setColor(out);
-        canvas.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+        canvas.drawRect(getX(), getY(), getWidth() - 1, getHeight() - 1);
         canvas.setColor(in);
-        canvas.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
+        canvas.drawRect(getX() + 1, getY() + 1, getWidth() - 3, getHeight() - 3);
     }
 
     @Override
