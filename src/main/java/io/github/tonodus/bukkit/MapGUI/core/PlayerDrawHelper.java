@@ -3,6 +3,7 @@ package io.github.tonodus.bukkit.MapGUI.core;
 import io.github.tonodus.bukkit.MapGUI.api.Window;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapView;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,7 +11,7 @@ import java.awt.image.BufferedImage;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 11.08.2014.
  */
-class PlayerDrawHelper {
+class PlayerDrawHelper implements DrawHelper {
     private final WorkerThread worker;
     private BufferedImage inProcess;
     private Graphics2D graphics;
@@ -55,12 +56,13 @@ class PlayerDrawHelper {
         });
     }
 
-    private void update(MapCanvas newCanvas) {
+    private void setNewMapCanvas(MapCanvas newCanvas) {
         this.canvas = newCanvas;
         invalidate();
     }
 
-    public void update(final Window window) {
+    @Override
+    public void setNewWindow(final Window window) {
         finishedWindowChange = false;
         worker.addToQueue(new Runnable() {
             @Override
@@ -72,6 +74,7 @@ class PlayerDrawHelper {
         invalidate();
     }
 
+    @Override
     public void invalidate() {
         needRedraw = true;
     }
@@ -86,7 +89,8 @@ class PlayerDrawHelper {
         worker.addToQueue(drawRunnable);
     }
 
-    public void onRenderTick(MapCanvas canvas) {
+    @Override
+    public void onTick(MapView view, MapCanvas canvas, Player player) {
        /* //fps
         if (lastFpsSecond == -1)
             lastFpsSecond = System.currentTimeMillis();
@@ -101,7 +105,7 @@ class PlayerDrawHelper {
         drawWindow();
 
         if (this.canvas != canvas)
-            update(canvas);
+            setNewMapCanvas(canvas);
 
         if (needSend) {
             needSend = false;

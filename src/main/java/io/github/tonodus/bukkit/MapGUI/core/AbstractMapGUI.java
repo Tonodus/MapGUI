@@ -22,12 +22,14 @@ abstract class AbstractMapGUI implements MapGUI {
     private MapView mapView;
     private InputController inputController;
     private MapRenderer internRenderer;
+    private DrawHelper drawHelper;
 
     public AbstractMapGUI(Plugin plugin) {
         this.window = null;
         this.plugin = plugin;
         this.stateListeners = new ArrayList<MapGUIStateListener>();
         inputController = getInputController();
+        drawHelper = getDrawHelper();
         internRenderer = new MapRenderer() {
             @Override
             public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
@@ -37,7 +39,7 @@ abstract class AbstractMapGUI implements MapGUI {
     }
 
     protected void render(MapView mapView, MapCanvas mapCanvas, Player player) {
-
+        drawHelper.onTick(mapView, mapCanvas, player);
     }
 
     @Override
@@ -67,6 +69,8 @@ abstract class AbstractMapGUI implements MapGUI {
         inputController = null;
         stateListeners.clear();
         stateListeners = null;
+        drawHelper.dispose();
+        drawHelper = null;
     }
 
     @Override
@@ -84,6 +88,7 @@ abstract class AbstractMapGUI implements MapGUI {
         if (this.window != null)
             this.window.detachedFrom(this);
         this.window = window;
+        this.drawHelper.setNewWindow(window);
         this.window.attachedOn(this);
     }
 
@@ -165,6 +170,11 @@ abstract class AbstractMapGUI implements MapGUI {
         stateListeners.remove(listener);
     }
 
+    @Override
+    public void invalidate() {
+        drawHelper.invalidate();
+    }
+
     protected final MapView getMapView() {
         return mapView;
     }
@@ -174,4 +184,6 @@ abstract class AbstractMapGUI implements MapGUI {
     }
 
     protected abstract InputController getInputController();
+
+    protected abstract DrawHelper getDrawHelper();
 }

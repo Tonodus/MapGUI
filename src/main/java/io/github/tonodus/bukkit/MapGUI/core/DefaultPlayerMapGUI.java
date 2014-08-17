@@ -1,6 +1,9 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
-import io.github.tonodus.bukkit.MapGUI.api.*;
+import io.github.tonodus.bukkit.MapGUI.api.Cursor;
+import io.github.tonodus.bukkit.MapGUI.api.InputController;
+import io.github.tonodus.bukkit.MapGUI.api.MapItemModifier;
+import io.github.tonodus.bukkit.MapGUI.api.PlayerMapGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,9 +27,9 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
 
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
+    private WorkerThread worker;
 
     private MoveHelper moveHelper;
-    private PlayerDrawHelper drawHelper;
 
     private DefaultCursor cursor;
     private Player showTo = null;
@@ -44,9 +47,9 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
         this.showTo = player;
         this.cursor = new DefaultCursor();
         this.mapGetter = getter;
-        this.drawHelper = new PlayerDrawHelper(WIDTH, HEIGHT, worker, player);
         this.moveHelper = new MoveHelper(plugin, this);
         this.bukkitListener = this;
+        this.worker = worker;
     }
 
     @Override
@@ -55,8 +58,6 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
             throw new IllegalStateException("Player to show != toShow!");
 
         super.render(mapView, mapCanvas, player);
-
-        drawHelper.onRenderTick(mapCanvas);
 
         if (mapCanvas.getCursors().size() < 1)
             mapCanvas.getCursors().addCursor(0, 0, (byte) 6);
@@ -101,8 +102,6 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
         super.dispose();
 
         cursor = null;
-        drawHelper.dispose();
-        drawHelper = null;
         showTo = null;
         itemBefore = null;
         mapGetter = null;
@@ -110,14 +109,15 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
     }
 
     @Override
-    public void setWindow(Window window) {
-        super.setWindow(window);
-        drawHelper.update(window);
+    protected InputController getInputController() {
+        return new DefaultInputController();
     }
 
     @Override
-    protected InputController getInputController() {
-        return new DefaultInputController();
+    protected DrawHelper getDrawHelper() {
+        DrawHelper h = new PlayerDrawHelper(WIDTH, HEIGHT, worker, showTo);
+        worker = null;
+        return h;
     }
 
     //========= E V E N T S ===========
@@ -197,11 +197,6 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
     @Override
     public final Cursor getCursor() {
         return cursor;
-    }
-
-    @Override
-    public void invalidate() {
-        drawHelper.invalidate();
     }
 
     @Override
