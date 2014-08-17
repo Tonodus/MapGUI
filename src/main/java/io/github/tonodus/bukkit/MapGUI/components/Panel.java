@@ -15,6 +15,9 @@ public class Panel extends BaseComponent {
     private Drawable background = new ColorDrawable(new Color(0, 0, 0, 255));
     private boolean centerContent = true;
 
+    public Panel() {
+    }
+
     public Panel(Component content) {
         this.content = content;
     }

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
@@ -75,9 +76,21 @@ public class MapGuiCollection {
 
     private class InternListener implements Listener {
         @EventHandler
+        public void click(EntityDamageByEntityEvent e) {
+            for (DefaultMapGui gui : guis)
+                gui.onClick(e);
+        }
+
+        @EventHandler
+        public void click(PlayerInteractEntityEvent e) {
+            for (DefaultMapGui gui : guis)
+                gui.onClick(e);
+        }
+
+        @EventHandler
         public void move(PlayerMoveEvent event) {
             for (DefaultMapGui gui : guis)
-                gui.moveHelper.onMove(event);
+                gui.onMove(event);
         }
 
         @EventHandler

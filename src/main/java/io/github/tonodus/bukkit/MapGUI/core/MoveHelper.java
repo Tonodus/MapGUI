@@ -13,10 +13,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 class MoveHelper {
     private static final int UNKNOWN = Integer.MIN_VALUE;
     private float baseYaw = UNKNOWN;
+    private final float basePitch = 50;
     private final Plugin plugin;
     private final DefaultMapGui gui;
     private final Player player;
-    private final float basePitch = 50;
+    private Location before;
     private BukkitRunnable resetRunnable = null;
 
     private boolean resetView = true;
@@ -28,6 +29,9 @@ class MoveHelper {
     }
 
     public void start() {
+        baseYaw = player.getLocation().getYaw();
+        before = player.getLocation();
+
         resetRunnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -42,6 +46,8 @@ class MoveHelper {
         resetRunnable.cancel();
         resetRunnable = null;
         baseYaw = UNKNOWN;
+
+        player.teleport(before);
     }
 
     private float calcYaw(PlayerMoveEvent event) {
@@ -83,7 +89,7 @@ class MoveHelper {
         int ox = c.getX(), oy = c.getY();
         int nx = Math.round(Math.max(0, Math.min(127, ox + yaw))), ny = Math.round(Math.max(0, Math.min(127, oy + pitch)));
         c.set(nx, ny);
-        gui.inputController.onMove(ox, oy, nx, ny);
+        gui.onMove(ox, oy, nx, ny);
 
         if (baseYaw == UNKNOWN)
             baseYaw = event.getFrom().getYaw();

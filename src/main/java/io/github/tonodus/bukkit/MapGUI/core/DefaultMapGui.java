@@ -5,10 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapCursor;
@@ -26,8 +24,8 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     public static final MapItemGetter defaultGetter = new DefaultMapGetter();
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
-    DefaultInputController inputController;
-    MoveHelper moveHelper;
+    private DefaultInputController inputController;
+    private MoveHelper moveHelper;
     private Window window;
     private DefaultCursor cursor;
     private Plugin plugin;
@@ -131,6 +129,17 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         this.mapView = null;
     }
 
+    @Override
+    public void setWindow(Window window) {
+        if (this.window != null)
+            this.window.detachedFrom(this);
+        this.window = window;
+        this.window.attachedOn(this);
+        drawHelper.update(window);
+    }
+
+    //========= E V E N T S ===========
+
     public void onQuit(PlayerQuitEvent event) {
         if (event.getPlayer() != showTo)
             return;
@@ -191,15 +200,29 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
             inputController.onRightClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking());
     }
 
-    @Override
-    public void setWindow(Window window) {
-        if (this.window != null)
-            this.window.detachedFrom(this);
-        this.window = window;
-        this.window.attachedOn(this);
-        drawHelper.update(window);
+    public void onMove(PlayerMoveEvent event) {
+        moveHelper.onMove(event);
     }
 
+    public void onClick(EntityDamageByEntityEvent e) {
+        if (!visible || !(e.getDamager() instanceof Player) || e.getDamager() != showTo)
+            return;
+
+        e.setCancelled(true);
+
+        inputController.onLeftClick(cursor.getX(), cursor.getY(), showTo.isSneaking());
+    }
+
+    public void onClick(PlayerInteractEntityEvent e) {
+        if (!visible || e.getPlayer() != showTo)
+            return;
+
+        e.setCancelled(true);
+
+        inputController.onRightClick(cursor.getX(), cursor.getY(), showTo.isSneaking());
+    }
+
+    // ============= GETTER / SETTER ==================
     @Override
     public Window getCurrentWindow() {
         return window;
@@ -268,4 +291,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         return showTo;
     }
 
+    public void onMove(int ox, int oy, int nx, int ny) {
+        inputController.onMove(ox, oy, nx, ny);
+    }
 }
