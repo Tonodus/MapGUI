@@ -1,7 +1,6 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.api.Cursor;
-import io.github.tonodus.bukkit.MapGUI.api.InputController;
 import io.github.tonodus.bukkit.MapGUI.api.MapItemModifier;
 import io.github.tonodus.bukkit.MapGUI.api.PlayerMapGUI;
 import org.bukkit.Bukkit;
@@ -27,7 +26,6 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
 
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
-    private WorkerThread worker;
 
     private MoveHelper moveHelper;
 
@@ -43,13 +41,12 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
     }
 
     public DefaultPlayerMapGUI(Plugin plugin, Player player, WorkerThread worker, MapItemModifier getter) {
-        super(plugin);
+        super(plugin, new DefaultInputController(), new PlayerDrawHelper(player, WIDTH, HEIGHT, worker));
         this.showTo = player;
         this.cursor = new DefaultCursor();
         this.mapGetter = getter;
         this.moveHelper = new MoveHelper(plugin, this);
         this.bukkitListener = this;
-        this.worker = worker;
     }
 
     @Override
@@ -106,18 +103,6 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
         itemBefore = null;
         mapGetter = null;
         moveHelper = null;
-    }
-
-    @Override
-    protected InputController getInputController() {
-        return new DefaultInputController();
-    }
-
-    @Override
-    protected DrawHelper getDrawHelper() {
-        DrawHelper h = new PlayerDrawHelper(WIDTH, HEIGHT, worker, showTo);
-        worker = null;
-        return h;
     }
 
     //========= E V E N T S ===========

@@ -24,12 +24,12 @@ abstract class AbstractMapGUI implements MapGUI {
     private MapRenderer internRenderer;
     private DrawHelper drawHelper;
 
-    public AbstractMapGUI(Plugin plugin) {
+    public AbstractMapGUI(Plugin plugin, InputController inputController, DrawHelper drawHelper) {
         this.window = null;
         this.plugin = plugin;
         this.stateListeners = new ArrayList<MapGUIStateListener>();
-        inputController = getInputController();
-        drawHelper = getDrawHelper();
+        this.inputController = inputController;
+        this.drawHelper = drawHelper;
         internRenderer = new MapRenderer() {
             @Override
             public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
@@ -182,8 +182,4 @@ abstract class AbstractMapGUI implements MapGUI {
     protected final Plugin getPlugin() {
         return plugin;
     }
-
-    protected abstract InputController getInputController();
-
-    protected abstract DrawHelper getDrawHelper();
 }
