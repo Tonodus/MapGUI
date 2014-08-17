@@ -8,7 +8,7 @@ import java.awt.*;
  * Created by Tonodus (http://tonodus.github.io) on 15.08.2014.
  */
 public class ColorDrawable implements Drawable {
-    private final Color color;
+    protected final Color color;
 
     public ColorDrawable(Color color) {
         this.color = color;
