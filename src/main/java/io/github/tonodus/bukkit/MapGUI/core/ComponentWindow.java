@@ -90,7 +90,7 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
 
     @Override
     public void drawAsync(Graphics2D canvas) {
-        drawBackground(canvas, DefaultMapGui.WIDTH, DefaultMapGui.HEIGHT);
+        drawBackground(canvas, DefaultPlayerMapGUI.WIDTH, DefaultPlayerMapGUI.HEIGHT);
 
         for (Component c : cs) {
             Shape s = canvas.getClip();

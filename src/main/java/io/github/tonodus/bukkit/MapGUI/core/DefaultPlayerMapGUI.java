@@ -19,14 +19,14 @@ import org.bukkit.plugin.Plugin;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public class DefaultMapGui extends AbstractMapGUI implements SinglePlayerMapGUI, Listener {
+public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI, Listener {
     public static final MapItemModifier defaultGetter = new DefaultMapItemModifier();
 
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
 
     private MoveHelper moveHelper;
-    private DrawHelper drawHelper;
+    private PlayerDrawHelper drawHelper;
 
     private DefaultCursor cursor;
     private Player showTo = null;
@@ -35,16 +35,16 @@ public class DefaultMapGui extends AbstractMapGUI implements SinglePlayerMapGUI,
 
     private Listener bukkitListener;
 
-    public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker) {
+    public DefaultPlayerMapGUI(Plugin plugin, Player player, WorkerThread worker) {
         this(plugin, player, worker, defaultGetter);
     }
 
-    public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker, MapItemModifier getter) {
+    public DefaultPlayerMapGUI(Plugin plugin, Player player, WorkerThread worker, MapItemModifier getter) {
         super(plugin);
         this.showTo = player;
         this.cursor = new DefaultCursor();
         this.mapGetter = getter;
-        this.drawHelper = new DrawHelper(WIDTH, HEIGHT, worker, player);
+        this.drawHelper = new PlayerDrawHelper(WIDTH, HEIGHT, worker, player);
         this.moveHelper = new MoveHelper(plugin, this);
         this.bukkitListener = this;
     }

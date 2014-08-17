@@ -13,7 +13,7 @@ public interface MapGUIStateListener {
     void onDispose(MapGUI me);
 
     /**
-     * This is called right before the {@link io.github.tonodus.bukkit.MapGUI.api.SinglePlayerMapGUI MapGUI} disposes.
+     * This is called right before the {@link PlayerMapGUI MapGUI} disposes.
      * Hook this event to prevent the MapGUI from being dropped.
      *
      * @param me  the {@link io.github.tonodus.bukkit.MapGUI.api.MapGUI MapGui} tha will maybe dropped

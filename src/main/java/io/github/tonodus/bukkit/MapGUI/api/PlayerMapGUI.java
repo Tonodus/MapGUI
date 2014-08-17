@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 17.08.2014.
  */
-public interface SinglePlayerMapGUI extends MapGUI {
+public interface PlayerMapGUI extends MapGUI {
     /**
      * Returns the cursor for this map
      *

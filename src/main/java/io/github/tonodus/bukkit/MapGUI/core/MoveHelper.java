@@ -15,14 +15,14 @@ class MoveHelper {
     private float baseYaw = UNKNOWN;
     private final float basePitch = 50;
     private final Plugin plugin;
-    private final DefaultMapGui gui;
+    private final DefaultPlayerMapGUI gui;
     private final Player player;
     private Location before;
     private BukkitRunnable resetRunnable = null;
 
     private boolean resetView = true;
 
-    public MoveHelper(Plugin plugin, DefaultMapGui gui) {
+    public MoveHelper(Plugin plugin, DefaultPlayerMapGUI gui) {
         this.plugin = plugin;
         this.gui = gui;
         this.player = gui.getAssignedPlayer();
