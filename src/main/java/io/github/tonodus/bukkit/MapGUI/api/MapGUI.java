@@ -31,6 +31,8 @@ public interface MapGUI extends InputListenerController {
 
     public void hide();
 
+    public boolean isVisible();
+
     /**
      * Call this to dispose the map and the memory it use, CALL {@link #hide hide} BEFORE!.
      */

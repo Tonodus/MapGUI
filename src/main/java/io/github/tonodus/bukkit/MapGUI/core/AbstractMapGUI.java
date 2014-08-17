@@ -116,11 +116,12 @@ abstract class AbstractMapGUI implements MapGUI {
     }
 
     @Override
-    public Window getCurrentWindow() {
+    public final Window getCurrentWindow() {
         return window;
     }
 
-    public boolean isVisible() {
+    @Override
+    public final boolean isVisible() {
         return visible;
     }
 
@@ -164,11 +165,11 @@ abstract class AbstractMapGUI implements MapGUI {
         stateListeners.remove(listener);
     }
 
-    protected MapView getMapView() {
+    protected final MapView getMapView() {
         return mapView;
     }
 
-    protected Plugin getPlugin() {
+    protected final Plugin getPlugin() {
         return plugin;
     }
 
