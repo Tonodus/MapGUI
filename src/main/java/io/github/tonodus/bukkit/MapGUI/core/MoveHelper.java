@@ -47,7 +47,10 @@ class MoveHelper {
         resetRunnable = null;
         baseYaw = UNKNOWN;
 
-        player.teleport(before);
+        Location l = player.getLocation();
+        l.setPitch(before.getPitch());
+        l.setYaw(before.getYaw());
+        player.teleport(l);
     }
 
     private float calcYaw(PlayerMoveEvent event) {
