@@ -25,7 +25,7 @@ class MoveHelper {
     public MoveHelper(Plugin plugin, DefaultMapGui gui) {
         this.plugin = plugin;
         this.gui = gui;
-        this.player = gui.assignedPlayer();
+        this.player = gui.getAssignedPlayer();
     }
 
     public void start() {
@@ -82,7 +82,7 @@ class MoveHelper {
     }
 
     public void onMove(final PlayerMoveEvent event) {
-        if (!gui.isVisible() || event.getPlayer() != gui.assignedPlayer())
+        if (!gui.isVisible() || event.getPlayer() != gui.getAssignedPlayer())
             return;
 
         float yaw = calcYaw(event);
@@ -92,7 +92,7 @@ class MoveHelper {
         int ox = c.getX(), oy = c.getY();
         int nx = Math.round(Math.max(0, Math.min(127, ox + yaw))), ny = Math.round(Math.max(0, Math.min(127, oy + pitch)));
         c.set(nx, ny);
-        gui.onMove(ox, oy, nx, ny);
+        gui.onMove(ox, oy, nx, ny, event.getPlayer());
 
         if (baseYaw == UNKNOWN)
             baseYaw = event.getFrom().getYaw();

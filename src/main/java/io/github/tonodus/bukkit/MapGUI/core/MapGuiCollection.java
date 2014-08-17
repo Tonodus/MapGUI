@@ -1,15 +1,11 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.MapGUIPlugin;
-import io.github.tonodus.bukkit.MapGUI.api.DropListener;
 import io.github.tonodus.bukkit.MapGUI.api.MapGUI;
+import io.github.tonodus.bukkit.MapGUI.api.MapGUIStateListenerAdapter;
+import io.github.tonodus.bukkit.MapGUI.api.SinglePlayerMapGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -21,7 +17,6 @@ import java.util.Collection;
 public class MapGuiCollection {
     private WorkerThread w;
     private MapGUIPlugin mainPlugin;
-    private Listener internListener = new InternListener();
 
     private Collection<DefaultMapGui> guis;
 
@@ -35,7 +30,7 @@ public class MapGuiCollection {
     }
 
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(internListener, mainPlugin);
+
     }
 
     public void onDisable() {
@@ -44,22 +39,11 @@ public class MapGuiCollection {
                 gui.hide();
             gui.dispose();
         }
-        HandlerList.unregisterAll(internListener);
     }
 
-    public MapGUI registerMapGui(Plugin yourPlugin, Player player) {
+    public SinglePlayerMapGUI registerMapGuiForPlayer(Plugin yourPlugin, Player player) {
         final DefaultMapGui gui = new DefaultMapGui(yourPlugin, player, w);
-        gui.addDropListener(new DropListener() {
-            @Override
-            public boolean onPossibleDrop(MapGUI me, Player player) {
-                return false;
-            }
-
-            @Override
-            public void onPreDispose(MapGUI me, Player player) {
-
-            }
-
+        gui.addDropListener(new MapGUIStateListenerAdapter() {
             @Override
             public void onDispose(final MapGUI me) {
                 Bukkit.getScheduler().runTask(mainPlugin, new Runnable() {
@@ -72,49 +56,5 @@ public class MapGuiCollection {
         });
         guis.add(gui);
         return gui;
-    }
-
-    private class InternListener implements Listener {
-        @EventHandler
-        public void click(EntityDamageByEntityEvent e) {
-            for (DefaultMapGui gui : guis)
-                gui.onClick(e);
-        }
-
-        @EventHandler
-        public void click(PlayerInteractEntityEvent e) {
-            for (DefaultMapGui gui : guis)
-                gui.onClick(e);
-        }
-
-        @EventHandler
-        public void move(PlayerMoveEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onMove(event);
-        }
-
-        @EventHandler
-        public void click(PlayerInteractEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onClick(event);
-        }
-
-        @EventHandler
-        public void scroll(PlayerItemHeldEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onScroll(event);
-        }
-
-        @EventHandler
-        public void drop(PlayerDropItemEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onDrop(event);
-        }
-
-        @EventHandler
-        public void quit(PlayerQuitEvent event) {
-            for (DefaultMapGui gui : guis)
-                gui.onQuit(event);
-        }
     }
 }

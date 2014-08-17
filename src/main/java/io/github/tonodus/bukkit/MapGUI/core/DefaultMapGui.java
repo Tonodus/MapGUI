@@ -2,63 +2,59 @@ package io.github.tonodus.bukkit.MapGUI.core;
 
 import io.github.tonodus.bukkit.MapGUI.api.*;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapCursor;
-import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public class DefaultMapGui extends MapRenderer implements MapGUI {
+public class DefaultMapGui extends AbstractMapGUI implements SinglePlayerMapGUI, Listener {
     public static final MapItemModifier defaultGetter = new DefaultMapItemModifier();
+
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
-    private DefaultInputController inputController;
+
     private MoveHelper moveHelper;
-    private Window window;
-    private DefaultCursor cursor;
-    private Plugin plugin;
     private DrawHelper drawHelper;
+
+    private DefaultCursor cursor;
     private Player showTo = null;
     private ItemStack itemBefore;
     private MapItemModifier mapGetter;
-    private boolean visible = false;
-    private Collection<DropListener> dropListeners;
-    private MapView mapView;
+
+    private Listener bukkitListener;
 
     public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker) {
         this(plugin, player, worker, defaultGetter);
     }
 
     public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker, MapItemModifier getter) {
+        super(plugin);
         this.showTo = player;
-        this.window = null;
         this.cursor = new DefaultCursor();
-        this.plugin = plugin;
-        this.inputController = new DefaultInputController();
         this.mapGetter = getter;
         this.drawHelper = new DrawHelper(WIDTH, HEIGHT, worker, player);
         this.moveHelper = new MoveHelper(plugin, this);
-        this.dropListeners = new ArrayList<DropListener>();
+        this.bukkitListener = this;
     }
-
 
     @Override
     public void render(MapView mapView, MapCanvas mapCanvas, Player player) {
         if (player != showTo)
             throw new IllegalStateException("Player to show != toShow!");
+
+        super.render(mapView, mapCanvas, player);
 
         drawHelper.onRenderTick(mapCanvas);
 
@@ -73,87 +69,72 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     private ItemStack toItemStack() {
         ItemStack stack = new ItemStack(Material.MAP);
         ItemStack map = mapGetter.modifyItem(stack);
-        map.setDurability(mapView.getId());
+        map.setDurability(getMapView().getId());
         return map;
     }
 
     @Override
     public void show() {
-        this.visible = true;
+        super.show();
         itemBefore = showTo.getItemInHand();
-
-        mapView = Bukkit.createMap(Bukkit.getWorld("world"));
-        for (MapRenderer render : mapView.getRenderers())
-            mapView.removeRenderer(render);
-
         showTo.setItemInHand(toItemStack());
-
-        mapView.addRenderer(this);
-
         moveHelper.start();
+
+        Bukkit.getPluginManager().registerEvents(bukkitListener, getPlugin());
 
         invalidate();
     }
 
     @Override
+    public void hide() {
+        super.hide();
+
+        HandlerList.unregisterAll(bukkitListener);
+
+        showTo.setItemInHand(itemBefore);
+        itemBefore = null;
+        this.moveHelper.stop();
+    }
+
+    @Override
     public void dispose() {
-        if (visible)
-            throw new IllegalStateException("Must hide before dispose gui!");
+        super.dispose();
 
-        for (DropListener listener : dropListeners)
-            listener.onDispose(this);
-
-        if (window != null)
-            window.detachedFrom(this);
-
-        window = null;
         cursor = null;
-        plugin = null;
         drawHelper.dispose();
         drawHelper = null;
-        inputController = null;
         showTo = null;
         itemBefore = null;
         mapGetter = null;
         moveHelper = null;
-        dropListeners.clear();
-        dropListeners = null;
-    }
-
-
-    @Override
-    public void hide() {
-        this.visible = false;
-        showTo.setItemInHand(itemBefore);
-        itemBefore = null;
-        this.moveHelper.stop();
-        this.mapView.removeRenderer(this);
-        this.mapView = null;
     }
 
     @Override
     public void setWindow(Window window) {
-        if (this.window != null)
-            this.window.detachedFrom(this);
-        this.window = window;
-        this.window.attachedOn(this);
+        super.setWindow(window);
         drawHelper.update(window);
     }
 
-    //========= E V E N T S ===========
+    @Override
+    protected InputController getInputController() {
+        return new DefaultInputController();
+    }
 
+    //========= E V E N T S ===========
+    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         if (event.getPlayer() != showTo)
             return;
 
-        if (visible)
+        if (isVisible())
             hide();
 
         dispose();
     }
 
+    @EventHandler
     public void onScroll(PlayerItemHeldEvent event) {
-        if (!visible || event.getPlayer() != showTo)
+        if (!isVisible() || event.getPlayer() != showTo)
             return;
 
         event.setCancelled(true);
@@ -161,77 +142,60 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         if (Math.abs(event.getPreviousSlot() - event.getNewSlot()) > 1)
             return;
 
-        inputController.onMouseWheel(1);
+        super.onWheel(cursor.getX(), cursor.getY(), 1, event.getPlayer());
     }
 
+    @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (!visible || event.getPlayer() != showTo)
+        if (!isVisible() || event.getPlayer() != showTo)
             return;
 
         event.setCancelled(true);
 
-        Player p = event.getPlayer();
-
-        boolean result = false;
-        for (DropListener listener : dropListeners)
-            result |= listener.onPossibleDrop(this, p);
-
-        if (!result) {
-            for (DropListener listener : dropListeners)
-                listener.onPreDispose(this, p);
-
-            Bukkit.getScheduler().runTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    hide();
-                    dispose();
-                }
-            });
-        }
+        super.tryDrop(event.getPlayer());
     }
 
+    @EventHandler
     public void onClick(PlayerInteractEvent event) {
-        if (!visible || event.getPlayer() != showTo)
+        if (!isVisible() || event.getPlayer() != showTo)
             return;
 
         event.setCancelled(true);
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR)
-            inputController.onLeftClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking());
+            super.onLeftClick(cursor.getX(), cursor.getY(), event.getPlayer());
         else if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR)
-            inputController.onRightClick(getCursor().getX(), getCursor().getY(), event.getPlayer().isSneaking());
+            super.onRightClick(cursor.getX(), cursor.getY(), event.getPlayer());
     }
 
+    @EventHandler
     public void onMove(PlayerMoveEvent event) {
         moveHelper.onMove(event);
     }
 
+    @EventHandler
     public void onClick(EntityDamageByEntityEvent e) {
-        if (!visible || !(e.getDamager() instanceof Player) || e.getDamager() != showTo)
+        if (!isVisible() || !(e.getDamager() instanceof Player) || e.getDamager() != showTo)
             return;
 
         e.setCancelled(true);
 
-        inputController.onLeftClick(cursor.getX(), cursor.getY(), showTo.isSneaking());
+        super.onLeftClick(cursor.getX(), cursor.getY(), (Player) e.getDamager());
     }
 
+    @EventHandler
     public void onClick(PlayerInteractEntityEvent e) {
-        if (!visible || e.getPlayer() != showTo)
+        if (!isVisible() || e.getPlayer() != showTo)
             return;
 
         e.setCancelled(true);
 
-        inputController.onRightClick(cursor.getX(), cursor.getY(), showTo.isSneaking());
+        super.onRightClick(cursor.getX(), cursor.getY(), e.getPlayer());
     }
 
     // ============= GETTER / SETTER ==================
     @Override
-    public Window getCurrentWindow() {
-        return window;
-    }
-
-    @Override
-    public Cursor getCursor() {
+    public final Cursor getCursor() {
         return cursor;
     }
 
@@ -241,59 +205,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     }
 
     @Override
-    public void setBackground(DyeColor color) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void addMouseListener(MouseListener listener) {
-        inputController.addMouseListener(listener);
-    }
-
-    @Override
-    public void addScrollListener(MouseWheelListener listener) {
-        inputController.addScrollListener(listener);
-    }
-
-    @Override
-    public void addInputListener(TextInputListener listener) {
-        inputController.addInputListener(listener);
-    }
-
-    @Override
-    public void removeMouseListener(MouseListener listener) {
-        inputController.removeMouseListener(listener);
-    }
-
-    @Override
-    public void removeScrollListener(MouseWheelListener listener) {
-        inputController.removeScrollListener(listener);
-    }
-
-    @Override
-    public void removeInputListener(TextInputListener listener) {
-        inputController.removeInputListener(listener);
-    }
-
-    @Override
-    public void addDropListener(DropListener listener) {
-        dropListeners.add(listener);
-    }
-
-    @Override
-    public void removeDropListener(DropListener listener) {
-        dropListeners.remove(listener);
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public Player assignedPlayer() {
+    public final Player getAssignedPlayer() {
         return showTo;
-    }
-
-    public void onMove(int ox, int oy, int nx, int ny) {
-        inputController.onMove(ox, oy, nx, ny);
     }
 }

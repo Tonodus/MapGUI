@@ -1,6 +1,6 @@
 package io.github.tonodus.bukkit.MapGUI.core;
 
-import io.github.tonodus.bukkit.MapGUI.api.InputListenerController;
+import io.github.tonodus.bukkit.MapGUI.api.InputController;
 import io.github.tonodus.bukkit.MapGUI.api.MouseListener;
 import io.github.tonodus.bukkit.MapGUI.api.MouseWheelListener;
 import io.github.tonodus.bukkit.MapGUI.api.TextInputListener;
@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-class DefaultInputController implements InputListenerController, TextInputListener, MouseListener, MouseWheelListener {
+class DefaultInputController implements InputController {
     private Collection<MouseListener> m;
     private Collection<MouseWheelListener> w;
     private Collection<TextInputListener> t;

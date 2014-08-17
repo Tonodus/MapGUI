@@ -6,20 +6,10 @@ import org.bukkit.entity.Player;
  * Created by Tonodus (http://tonodus.github.io) on 13.08.2014.
  */
 public class MapGUIs {
-    private static final DropListener dontDrop = new DropListener() {
+    private static final MapGUIStateListener dontDrop = new MapGUIStateListenerAdapter() {
         @Override
-        public boolean onPossibleDrop(MapGUI me, Player player) {
+        public boolean shouldBlockDrop(MapGUI me, Player who) {
             return true;
-        }
-
-        @Override
-        public void onPreDispose(MapGUI me, Player player) {
-
-        }
-
-        @Override
-        public void onDispose(MapGUI me) {
-
         }
     };
 
