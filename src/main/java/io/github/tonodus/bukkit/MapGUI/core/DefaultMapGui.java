@@ -3,6 +3,7 @@ package io.github.tonodus.bukkit.MapGUI.core;
 import io.github.tonodus.bukkit.MapGUI.api.*;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -21,7 +22,7 @@ import java.util.Collection;
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 public class DefaultMapGui extends MapRenderer implements MapGUI {
-    public static final MapItemGetter defaultGetter = new DefaultMapGetter();
+    public static final MapItemModifier defaultGetter = new DefaultMapItemModifier();
     static final int HEIGHT = 128;
     static final int WIDTH = 128;
     private DefaultInputController inputController;
@@ -32,7 +33,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     private DrawHelper drawHelper;
     private Player showTo = null;
     private ItemStack itemBefore;
-    private MapItemGetter mapGetter;
+    private MapItemModifier mapGetter;
     private boolean visible = false;
     private Collection<DropListener> dropListeners;
     private MapView mapView;
@@ -41,7 +42,7 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
         this(plugin, player, worker, defaultGetter);
     }
 
-    public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker, MapItemGetter getter) {
+    public DefaultMapGui(Plugin plugin, Player player, WorkerThread worker, MapItemModifier getter) {
         this.showTo = player;
         this.window = null;
         this.cursor = new DefaultCursor();
@@ -70,7 +71,8 @@ public class DefaultMapGui extends MapRenderer implements MapGUI {
     }
 
     private ItemStack toItemStack() {
-        ItemStack map = mapGetter.getMap();
+        ItemStack stack = new ItemStack(Material.MAP);
+        ItemStack map = mapGetter.modifyItem(stack);
         map.setDurability(mapView.getId());
         return map;
     }

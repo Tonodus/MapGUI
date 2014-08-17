@@ -5,6 +5,6 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public interface MapItemGetter {
-    public ItemStack getMap();
+public interface MapItemModifier {
+    public ItemStack modifyItem(ItemStack defaultItemStack);
 }
