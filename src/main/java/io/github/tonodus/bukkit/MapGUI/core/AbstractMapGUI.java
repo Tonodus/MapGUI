@@ -161,7 +161,7 @@ abstract class AbstractMapGUI implements MapGUI {
     }
 
     @Override
-    public void addDropListener(MapGUIStateListener listener) {
+    public void addStateListener(MapGUIStateListener listener) {
         stateListeners.add(listener);
     }
 

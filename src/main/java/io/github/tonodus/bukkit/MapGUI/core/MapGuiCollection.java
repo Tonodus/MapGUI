@@ -43,7 +43,7 @@ public class MapGuiCollection {
 
     public PlayerMapGUI registerMapGuiForPlayer(Plugin yourPlugin, Player player) {
         final DefaultPlayerMapGUI gui = new DefaultPlayerMapGUI(yourPlugin, player, w);
-        gui.addDropListener(new MapGUIStateListenerAdapter() {
+        gui.addStateListener(new MapGUIStateListenerAdapter() {
             @Override
             public void onDispose(final MapGUI me) {
                 Bukkit.getScheduler().runTask(mainPlugin, new Runnable() {

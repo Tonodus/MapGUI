@@ -14,7 +14,7 @@ public class MapGUIs {
     };
 
     public static void forceStayVisible(MapGUI gui) {
-        gui.addDropListener(dontDrop);
+        gui.addStateListener(dontDrop);
     }
 
     public static void unForceStayVisible(MapGUI gui) {

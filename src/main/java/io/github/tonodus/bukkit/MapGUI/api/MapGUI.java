@@ -38,7 +38,7 @@ public interface MapGUI extends InputListenerController {
      */
     public void dispose();
 
-    public void addDropListener(MapGUIStateListener listener);
+    public void addStateListener(MapGUIStateListener listener);
 
     public void removeDropListener(MapGUIStateListener listener);
 }
