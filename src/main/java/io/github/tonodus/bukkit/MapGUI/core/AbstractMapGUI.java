@@ -51,6 +51,9 @@ abstract class AbstractMapGUI implements MapGUI {
             mapView.removeRenderer(render);
 
         mapView.addRenderer(internRenderer);
+
+        for (MapGUIStateListener listener : stateListeners)
+            listener.onShow(this);
     }
 
     @Override
