@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapCursor;
@@ -176,6 +177,12 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
         e.setCancelled(true);
 
         super.onRightClick(cursor.getX(), cursor.getY(), e.getPlayer());
+    }
+
+    @EventHandler
+    public void onPluginDisable(PluginDisableEvent e) {
+        if (e.getPlugin() == getPlugin())
+            dispose();
     }
 
     // ============= GETTER / SETTER ==================

@@ -30,6 +30,7 @@ class DefaultCursor implements Cursor {
         this.type = newType;
     }
 
+    @Override
     public void set(int x, int y) {
         if (x < 0 || x >= 128 || y < 0 || y >= 128)
             throw new IllegalArgumentException("Range for x|y is 0 up to 127! (x=" + x + "|y=" + y + ")");

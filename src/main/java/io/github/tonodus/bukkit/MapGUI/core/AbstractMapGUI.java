@@ -56,7 +56,7 @@ abstract class AbstractMapGUI implements MapGUI {
     @Override
     public void dispose() {
         if (visible)
-            throw new IllegalStateException("Must hide before dispose gui!");
+            hide();
 
         for (MapGUIStateListener listener : stateListeners)
             listener.onDispose(this);

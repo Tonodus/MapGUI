@@ -18,7 +18,6 @@ class PlayerDrawHelper extends AbstractDrawHelper {
 
     @Override
     protected void progressImageAndSend(BufferedImage image, MapCanvas canvas) {
-        image.flush();
         canvas.drawImage(0, 0, image);
         player.sendMap(canvas.getMapView());
     }
