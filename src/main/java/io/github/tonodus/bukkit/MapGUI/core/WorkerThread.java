@@ -7,8 +7,8 @@ import java.util.Queue;
  * Created by Tonodus (http://tonodus.github.io) on 10.07.2014.
  */
 public class WorkerThread implements Runnable {
+    private final Queue<Runnable> toDo;
     private Thread thread;
-    private volatile Queue<Runnable> toDo;
 
     public WorkerThread() {
         toDo = new LinkedList<Runnable>();

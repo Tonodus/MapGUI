@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 class MoveHelper {
     private static final int UNKNOWN = Integer.MIN_VALUE;
     private float baseYaw = UNKNOWN;
-    private final float basePitch = 50;
+    private static final float basePitch = 50;
     private final Plugin plugin;
     private final DefaultPlayerMapGUI gui;
     private final Player player;

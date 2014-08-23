@@ -15,13 +15,13 @@ import java.util.Collection;
  * Created by Tonodus (http://tonodus.github.io) on 17.08.2014.
  */
 abstract class AbstractMapGUI implements MapGUI {
+    private final MapRenderer internRenderer;
     private Window window;
     private Plugin plugin;
     private boolean visible = false;
     private Collection<MapGUIStateListener> stateListeners;
     private MapView mapView;
     private InputController inputController;
-    private MapRenderer internRenderer;
     private DrawHelper drawHelper;
 
     public AbstractMapGUI(Plugin plugin, InputController inputController, DrawHelper drawHelper) {

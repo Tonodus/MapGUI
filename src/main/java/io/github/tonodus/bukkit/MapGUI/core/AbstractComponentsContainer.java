@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Tonodus (http://tonodus.github.io) on 16.08.2014.
  */
 public abstract class AbstractComponentsContainer<C extends Component> extends BaseComponent implements ComponentsContainer<C> {
-    private List<C> components;
+    private final List<C> components;
     private C focused = null;
 
     public AbstractComponentsContainer() {

@@ -18,7 +18,7 @@ public class MapGuiCollection {
     private WorkerThread w;
     private MapGUIPlugin mainPlugin;
 
-    private Collection<DefaultPlayerMapGUI> guis;
+    private Collection<MapGUI> guis;
 
     /**
      * @hide
@@ -26,7 +26,7 @@ public class MapGuiCollection {
     public MapGuiCollection(WorkerThread thread, MapGUIPlugin mainPlugin) {
         this.w = thread;
         this.mainPlugin = mainPlugin;
-        this.guis = new ArrayList<DefaultPlayerMapGUI>();
+        this.guis = new ArrayList<MapGUI>();
     }
 
     public void onEnable() {
@@ -34,9 +34,7 @@ public class MapGuiCollection {
     }
 
     public void onDisable() {
-        for (DefaultPlayerMapGUI gui : guis) {
-            if (gui.isVisible())
-                gui.hide();
+        for (MapGUI gui : guis) {
             gui.dispose();
         }
     }

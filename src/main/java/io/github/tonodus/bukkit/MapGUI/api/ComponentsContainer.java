@@ -29,7 +29,7 @@ public interface ComponentsContainer<C extends Component> extends InputListenerC
     /**
      * Set the focus to the current element and tries to request the focus itself for this ComponentsContainer
      *
-     * @param component
+     * @param component the component that is focused
      */
     @Override
     void setFocused(Component component);

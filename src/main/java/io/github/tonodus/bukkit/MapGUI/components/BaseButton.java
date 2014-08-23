@@ -100,7 +100,7 @@ public class BaseButton extends Panel {
     }
 
     public static enum ButtonState {
-        NORMAL, HOVERING, CLICKING;
+        NORMAL, HOVERING, CLICKING
     }
 
     private class InternMouseListener extends MouseAdapter {

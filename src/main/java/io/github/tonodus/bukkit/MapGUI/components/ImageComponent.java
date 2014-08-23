@@ -34,6 +34,6 @@ public class ImageComponent extends BaseComponent {
     }
 
     public enum Mode {
-        CUT, STRETCH;
+        CUT, STRETCH
     }
 }

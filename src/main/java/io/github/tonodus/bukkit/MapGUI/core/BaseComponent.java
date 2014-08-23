@@ -41,10 +41,11 @@ public abstract class BaseComponent implements Component {
 
     @Override
     public boolean requestFocus() {
-        if (attachedTo instanceof FocusHolder) {
-            ((FocusHolder) attachedTo).setFocused(this);
+        if (attachedTo != null) {
+            attachedTo.setFocused(this);
             return true;
         }
+
         return false;
     }
 

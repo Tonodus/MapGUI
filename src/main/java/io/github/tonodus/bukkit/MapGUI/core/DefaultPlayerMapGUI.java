@@ -65,6 +65,7 @@ public class DefaultPlayerMapGUI extends AbstractMapGUI implements PlayerMapGUI,
         c.setY(cursor.getMapY());
     }
 
+    @SuppressWarnings("deprecation")
     private ItemStack toItemStack() {
         ItemStack stack = new ItemStack(Material.MAP);
         ItemStack map = mapGetter.modifyItem(stack);
