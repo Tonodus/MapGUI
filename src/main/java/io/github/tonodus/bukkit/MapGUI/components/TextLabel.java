@@ -34,6 +34,10 @@ public class TextLabel extends BaseComponent {
         this.text = text;
     }
 
+    public void setFont(Font font) {
+        this.font = font;
+    }
+
     @Override
     public void drawAsync(Graphics2D g) {
         Rectangle2D r = font.getStringBounds(text, g.getFontRenderContext());
