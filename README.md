@@ -20,5 +20,5 @@ Installation
 
 Wiki
 ----
-For server administrators: *currently not available* :(
+For server administrators: *currently not available* :(  
 For plugin developser: [See Github-wiki](https://github.com/Tonodus/MapGUI/wiki)
