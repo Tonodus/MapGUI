@@ -39,13 +39,6 @@ public abstract class BaseComponent implements Component {
         container.removeScrollListener(checkWheel);
     }
 
-    private boolean is(int x, int y) {
-        if (x >= getX() && x <= getX() + getWidth() &&
-                y >= getY() && y <= getY() + getHeight())
-            return true;
-        return false;
-    }
-
     @Override
     public boolean requestFocus() {
         if (attachedTo instanceof FocusHolder) {
@@ -163,10 +156,14 @@ public abstract class BaseComponent implements Component {
         controller.removeInputListener(listener);
     }
 
+    public boolean hasFocus() {
+        return hasFocus;
+    }
+
     private class MouseCheck implements MouseListener {
         @Override
         public void onLeftClick(int x, int y, boolean withShift) {
-            if (is(x, y)) {
+            if (attachedTo.getComponentAt(x, y) == BaseComponent.this) {
                 requestFocus();
                 controller.onLeftClick(x, y, withShift);
             }
@@ -174,13 +171,13 @@ public abstract class BaseComponent implements Component {
 
         @Override
         public void onRightClick(int x, int y, boolean withShift) {
-            if (is(x, y))
+            if (attachedTo.getComponentAt(x, y) == BaseComponent.this)
                 controller.onRightClick(x, y, withShift);
         }
 
         @Override
         public void onMove(int oldX, int oldY, int newX, int newY) {
-            if (is(newX, newY)) {
+            if (attachedTo.getComponentAt(newX, newY) == BaseComponent.this) {
                 if (!mouseWasIn) {
                     controller.onMouseEnter(newX, newY);
                     mouseWasIn = true;
@@ -192,30 +189,30 @@ public abstract class BaseComponent implements Component {
             }
         }
 
-        //[[ Never called in ComponentsContainer
         @Override
         public void onMouseEnter(int newX, int newY) {
-            controller.onMouseEnter(newX, newY);
+            if (attachedTo.getComponentAt(newX, newY) == BaseComponent.this)
+                controller.onMouseEnter(newX, newY);
         }
 
         @Override
         public void onMouseLeave(int lastX, int lastY) {
-            controller.onMouseLeave(lastX, lastY);
+            if (attachedTo.getComponentAt(lastX, lastY) == BaseComponent.this)
+                controller.onMouseLeave(lastX, lastY);
         }
-        // ]]
     }
 
     private class WheelCheck implements MouseWheelListener {
         @Override
         public void onMouseWheel(int amount) {
-            controller.onMouseWheel(amount);
+            if (hasFocus) controller.onMouseWheel(amount);
         }
     }
 
     private class InputCheck implements TextInputListener {
         @Override
         public void onTextInput(String text) {
-            controller.onTextInput(text);
+            if (hasFocus) controller.onTextInput(text);
         }
     }
 }

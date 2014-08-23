@@ -8,13 +8,13 @@ import io.github.tonodus.bukkit.MapGUI.api.MapGUI;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
 public abstract class ComponentWindow extends InputWindow implements ComponentsContainer, FocusHolder {
-    private Collection<Component> cs;
+    private List<Component> cs;
     private MapGUI gui;
 
     private Component focused = null;
@@ -62,6 +62,7 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
         gui.invalidate();
     }
 
+    @Override
     public Component getFocused() {
         return focused;
     }
@@ -100,6 +101,18 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
         }
     }
 
+    @Override
+    public io.github.tonodus.bukkit.MapGUI.api.Component getComponentAt(int x, int y) {
+        for (int i = cs.size() - 1; i >= 0; i--) {
+            io.github.tonodus.bukkit.MapGUI.api.Component c = cs.get(i);
+            if (x >= c.getX() && x <= c.getX() + c.getWidth() &&
+                    y >= c.getY() && y <= c.getY() + c.getHeight())
+                return c;
+        }
+
+
+        return null;
+    }
 
     protected abstract void drawBackground(Graphics2D g, int width, int height);
 }
