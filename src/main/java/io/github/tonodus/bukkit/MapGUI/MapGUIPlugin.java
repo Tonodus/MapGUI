@@ -5,6 +5,7 @@ import io.github.tonodus.bukkit.MapGUI.core.MapGuiCollection;
 import io.github.tonodus.bukkit.MapGUI.core.WorkerThread;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -15,7 +16,7 @@ public class MapGUIPlugin extends JavaPlugin implements Listener {
     private WorkerThread thread;
     private MapGuiCollection collection;
 
-    public static PlayerMapGUI registerMapGuiForPlayer(org.bukkit.plugin.Plugin yourPlugin, Player toShow) {
+    public static PlayerMapGUI registerMapGuiForPlayer(Plugin yourPlugin, Player toShow) {
         if (i == null)
             throw new IllegalStateException("MapGui plugin was disabled!");
 

@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public class BaseWindow extends ComponentWindow {
+public class BaseWindow extends DefaultComponentWindow {
     private Color background;
 
     public BaseWindow() {

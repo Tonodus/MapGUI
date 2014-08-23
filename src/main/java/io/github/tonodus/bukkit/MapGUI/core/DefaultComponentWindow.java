@@ -2,8 +2,7 @@ package io.github.tonodus.bukkit.MapGUI.core;
 
 
 import io.github.tonodus.bukkit.MapGUI.api.Component;
-import io.github.tonodus.bukkit.MapGUI.api.ComponentsContainer;
-import io.github.tonodus.bukkit.MapGUI.api.FocusHolder;
+import io.github.tonodus.bukkit.MapGUI.api.ComponentWindow;
 import io.github.tonodus.bukkit.MapGUI.api.MapGUI;
 
 import java.awt.*;
@@ -13,13 +12,13 @@ import java.util.List;
 /**
  * Created by Tonodus (http://tonodus.github.io) on 10.08.2014.
  */
-public abstract class ComponentWindow extends InputWindow implements ComponentsContainer, FocusHolder {
+public abstract class DefaultComponentWindow extends InputWindow implements ComponentWindow {
     private List<Component> cs;
     private MapGUI gui;
 
     private Component focused = null;
 
-    public ComponentWindow() {
+    public DefaultComponentWindow() {
         this.cs = new ArrayList<Component>();
     }
 
@@ -27,11 +26,13 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
         return cs;
     }
 
+    @Override
     public void addComponent(Component... components) {
         for (Component c : components)
             addComponent(c);
     }
 
+    @Override
     public void addComponent(Component component) {
         component.onAttachedTo(this);
         cs.add(component);
@@ -56,6 +57,7 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
             gui.invalidate();
     }
 
+    @Override
     public void removeComponent(Component component) {
         component.onDetachedFrom(this);
         cs.remove(component);
@@ -82,6 +84,11 @@ public abstract class ComponentWindow extends InputWindow implements ComponentsC
     public void updateSync() {
         for (Component c : cs)
             c.updateSync();
+    }
+
+    @Override
+    public boolean hasComponent(Component c) {
+        return cs.indexOf(c) != -1;
     }
 
     @Override
