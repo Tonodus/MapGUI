@@ -11,40 +11,30 @@ import java.awt.*;
  */
 public class Checkbox extends BaseComponent {
     private boolean isChecked;
-    private Drawable unchecked, checked, content;
-    private int checkWidth;
+    private Drawable unchecked, checked;
 
-    public Checkbox(Drawable unchecked, Drawable checked, Drawable content) {
+    public Checkbox(Drawable unchecked, Drawable checked) {
         this.isChecked = false;
         this.unchecked = unchecked;
         this.checked = checked;
-        this.content = content;
-        this.checkWidth = 5;
         super.addMouseListener(new InternalMouseListener());
     }
 
-    public Checkbox(Drawable content) {
-        this(new UncheckedDrawable(), new CheckedDrawable(), content);
-    }
-
-    public Checkbox(String text) {
-        this(new TextLabel(text).calcPreferredSizeNextFrame());
+    public Checkbox() {
+        this(new UncheckedDrawable(), new CheckedDrawable());
     }
 
     @Override
     public void drawAsync(Graphics2D g) {
         Graphics2D cp = (Graphics2D) g.create();
 
-        cp.setClip(getX(), getY(), checkWidth, getHeight());
+        // cp.setClip(getX(), getY(), getWidth() + 1, getHeight() + 1);
         cp.translate(getX(), getY());
         if (isChecked)
-            checked.drawAsync(cp, checkWidth, getHeight());
+            checked.drawAsync(cp, getWidth(), getHeight());
         else
-            unchecked.drawAsync(cp, checkWidth, getHeight());
+            unchecked.drawAsync(cp, getWidth(), getHeight());
 
-        cp.translate(checkWidth, 0);
-        cp.setClip(0, 0, getWidth() - checkWidth, getHeight());
-        content.drawAsync(cp, getWidth() - checkWidth, getHeight());
         cp.dispose();
     }
 
@@ -57,26 +47,18 @@ public class Checkbox extends BaseComponent {
         invalidate();
     }
 
-    public void setBoxSize(int width) {
-        this.checkWidth = width;
-        invalidate();
-    }
-
     @Override
     public void updateSync() {
-        if (isChecked)
-            checked.updateSync();
-        else
-            unchecked.updateSync();
-        content.updateSync();
+        checked.updateSync();
+        unchecked.updateSync();
     }
 
     private static class CheckedDrawable extends UncheckedDrawable {
         @Override
         public void drawAsync(Graphics2D canvas, int width, int height) {
             super.drawAsync(canvas, width, height);
-            canvas.drawLine(0, height / 2, width / 2, height);
-            canvas.drawLine(width / 2, height, width, 0);
+            canvas.drawLine(0, 0, width - 1, height - 1);
+            canvas.drawLine(0, height - 1, width - 1, 0);
         }
     }
 
@@ -89,7 +71,7 @@ public class Checkbox extends BaseComponent {
         @Override
         public void drawAsync(Graphics2D canvas, int width, int height) {
             canvas.setColor(Color.BLACK);
-            canvas.drawRect(0, 0, width, height);
+            canvas.drawRect(0, 0, width - 1, height - 1);
         }
     }
 

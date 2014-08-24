@@ -101,11 +101,10 @@ public abstract class DefaultComponentWindow extends InputWindow implements Comp
         drawBackground(canvas, DefaultPlayerMapGUI.WIDTH, DefaultPlayerMapGUI.HEIGHT);
 
         for (Component c : cs) {
-            Shape s = canvas.getClip();
             canvas.setClip(c.getX(), c.getY(), c.getWidth(), c.getHeight());
             c.drawAsync(canvas);
-            canvas.setClip(s);
         }
+        canvas.setClip(null);
     }
 
     @Override

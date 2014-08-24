@@ -12,17 +12,14 @@ public class RadioButtonComponent extends Checkbox implements RadioButton {
     private static Drawable uncheckedDrawable = null, checkedDrawable = null;
     private RadioGroup attachedTo = null;
 
-    public RadioButtonComponent(Drawable unchecked, Drawable checked, Drawable content) {
-        super(unchecked, checked, content);
+    public RadioButtonComponent(Drawable unchecked, Drawable checked) {
+        super(unchecked, checked);
     }
 
-    public RadioButtonComponent(Drawable content) {
-        super(getU(), getC(), content);
+    public RadioButtonComponent() {
+        super(getU(), getC());
     }
 
-    public RadioButtonComponent(String text) {
-        super(new TextLabel(text));
-    }
 
     private static Drawable getU() {
         return (uncheckedDrawable == null ? (uncheckedDrawable = new UncheckedDrawable()) : uncheckedDrawable);

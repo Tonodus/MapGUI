@@ -10,13 +10,13 @@ import java.awt.*;
  */
 public class ComponentsContainerComponent<C extends Component> extends AbstractComponentsContainer<C> {
     @Override
-    public void drawAsync(Graphics2D g) {
+    public void drawAsync(Graphics2D old) {
+        Graphics2D g = (Graphics2D) old.create();
         for (Component c : getComponents()) {
-            Shape clip = g.getClip();
-            g.setClip(c.getX(), c.getY(), c.getWidth(), c.getHeight());
+            g.clipRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
             c.drawAsync(g);
-            g.clip(clip);
         }
+        g.dispose();
     }
 
     @Override
