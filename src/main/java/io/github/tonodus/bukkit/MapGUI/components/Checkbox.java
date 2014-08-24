@@ -28,23 +28,24 @@ public class Checkbox extends BaseComponent {
     }
 
     public Checkbox(String text) {
-        this(new TextLabel(text));
+        this(new TextLabel(text).calcPreferredSizeNextFrame());
     }
 
     @Override
     public void drawAsync(Graphics2D g) {
-        g.translate(getX(), getY());
-        Shape clip = g.getClip();
-        g.clipRect(getX(), getY(), checkWidth, getHeight());
+        Graphics2D cp = (Graphics2D) g.create();
+
+        cp.setClip(getX(), getY(), checkWidth, getHeight());
+        cp.translate(getX(), getY());
         if (isChecked)
-            checked.drawAsync(g, checkWidth, getHeight());
+            checked.drawAsync(cp, checkWidth, getHeight());
         else
-            unchecked.drawAsync(g, checkWidth, getHeight());
-        g.clipRect(getX() + checkWidth, getY(), getWidth() - checkWidth, getHeight());
-        g.translate(checkWidth, 0);
-        content.drawAsync(g, getWidth() - checkWidth, getHeight());
-        g.translate(-(getX() + checkWidth), -getY());
-        g.clip(clip);
+            unchecked.drawAsync(cp, checkWidth, getHeight());
+
+        cp.translate(checkWidth, 0);
+        cp.setClip(0, 0, getWidth() - checkWidth, getHeight());
+        content.drawAsync(cp, getWidth() - checkWidth, getHeight());
+        cp.dispose();
     }
 
     public final boolean isChecked() {

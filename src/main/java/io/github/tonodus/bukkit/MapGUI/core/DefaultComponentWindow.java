@@ -102,7 +102,7 @@ public abstract class DefaultComponentWindow extends InputWindow implements Comp
 
         for (Component c : cs) {
             Shape s = canvas.getClip();
-            canvas.clipRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
+            canvas.setClip(c.getX(), c.getY(), c.getWidth(), c.getHeight());
             c.drawAsync(canvas);
             canvas.setClip(s);
         }

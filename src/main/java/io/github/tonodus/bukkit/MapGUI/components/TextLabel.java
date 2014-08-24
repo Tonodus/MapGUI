@@ -22,8 +22,9 @@ public class TextLabel extends BaseComponent {
         this.text = text;
     }
 
-    public void calcPreferredSizeNextFrame() {
+    public TextLabel calcPreferredSizeNextFrame() {
         hasCalc = true;
+        return this;
     }
 
     public String getText() {

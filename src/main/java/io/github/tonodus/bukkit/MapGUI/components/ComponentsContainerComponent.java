@@ -13,7 +13,7 @@ public class ComponentsContainerComponent<C extends Component> extends AbstractC
     public void drawAsync(Graphics2D g) {
         for (Component c : getComponents()) {
             Shape clip = g.getClip();
-            g.clipRect(c.getX(), c.getY(), c.getWidth(), c.getHeight());
+            g.setClip(c.getX(), c.getY(), c.getWidth(), c.getHeight());
             c.drawAsync(g);
             g.clip(clip);
         }
