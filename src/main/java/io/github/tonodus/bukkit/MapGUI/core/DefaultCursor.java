@@ -37,8 +37,10 @@ class DefaultCursor implements Cursor {
 
         this.x = x;
         this.y = y;
-        this.mx = (byte) ((x * 2) - 127);
-        this.my = (byte) ((y * 2) - 127);
+
+        int cx = type.getClickPoint()[0], cy = type.getClickPoint()[1];
+        this.mx = (byte) (((Math.min(x, 127 + cx) * 2) - 127) - cx);
+        this.my = (byte) (((Math.min(y, 127 + cy) * 2) - 127) - cy);
     }
 
     public byte getMapX() {

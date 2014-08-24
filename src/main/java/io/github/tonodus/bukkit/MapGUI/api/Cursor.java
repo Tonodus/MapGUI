@@ -23,6 +23,7 @@ public interface Cursor {
     public enum CursorType {
         NO(null), WHITE_POINTER(MapCursor.Type.WHITE_POINTER), GREEN_POINTER(MapCursor.Type.GREEN_POINTER),
         RED_POINTER(MapCursor.Type.RED_POINTER), BLUE_POINTER(MapCursor.Type.BLUE_POINTER), WHITE_CROSS(MapCursor.Type.WHITE_CROSS);
+        private static int[] zero = new int[]{0, 0}, three = new int[]{-3, -3};
         private MapCursor.Type value;
 
         private CursorType(MapCursor.Type v) {
@@ -37,6 +38,16 @@ public interface Cursor {
                 default:
                     cursor.setVisible(true);
                     cursor.setType(this.value);
+            }
+        }
+
+        public int[] getClickPoint() {
+            switch (this) {
+                case NO:
+                case WHITE_CROSS:
+                    return zero;
+                default:
+                    return three;
             }
         }
     }
