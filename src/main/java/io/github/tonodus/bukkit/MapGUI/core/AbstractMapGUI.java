@@ -19,6 +19,7 @@ abstract class AbstractMapGUI implements MapGUI {
     private Window window;
     private Plugin plugin;
     private boolean visible = false;
+    private boolean disposed = false;
     private Collection<MapGUIStateListener> stateListeners;
     private MapView mapView;
     private InputController inputController;
@@ -39,11 +40,20 @@ abstract class AbstractMapGUI implements MapGUI {
     }
 
     protected void render(MapView mapView, MapCanvas mapCanvas, Player player) {
-        drawHelper.onTick(mapView, mapCanvas, player);
+        if (visible)
+            drawHelper.onTick(mapView, mapCanvas, player);
+        else checkDispose();
+    }
+
+    private void checkDispose() {
+        if (disposed)
+            throw new IllegalStateException("Map already disposed!");
     }
 
     @Override
     public void show() {
+        checkDispose();
+
         this.visible = true;
 
         mapView = Bukkit.createMap(Bukkit.getWorld("world"));
@@ -58,6 +68,8 @@ abstract class AbstractMapGUI implements MapGUI {
 
     @Override
     public void dispose() {
+        checkDispose();
+
         if (visible)
             hide();
 
@@ -67,6 +79,7 @@ abstract class AbstractMapGUI implements MapGUI {
         if (window != null)
             window.detachedFrom(this);
 
+        disposed = true;
         window = null;
         plugin = null;
         inputController = null;
@@ -78,6 +91,8 @@ abstract class AbstractMapGUI implements MapGUI {
 
     @Override
     public void hide() {
+        checkDispose();
+
         for (MapGUIStateListener l : stateListeners)
             l.onHide(this);
 
@@ -88,6 +103,8 @@ abstract class AbstractMapGUI implements MapGUI {
 
     @Override
     public void setWindow(Window window) {
+        checkDispose();
+
         if (this.window != null)
             this.window.detachedFrom(this);
         this.window = window;
@@ -175,6 +192,7 @@ abstract class AbstractMapGUI implements MapGUI {
 
     @Override
     public void invalidate() {
+        checkDispose();
         drawHelper.invalidate();
     }
 

@@ -7,6 +7,7 @@ import io.github.tonodus.bukkit.MapGUI.api.PlayerMapGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +20,13 @@ public class MapGuiCollection {
     private MapGUIPlugin mainPlugin;
 
     private Collection<MapGUI> guis;
+    private Collection<MapGUI> toRemove;
+    private BukkitRunnable checkTask = new BukkitRunnable() {
+        @Override
+        public void run() {
+            check();
+        }
+    };
 
     /**
      * @hide
@@ -27,6 +35,7 @@ public class MapGuiCollection {
         this.w = thread;
         this.mainPlugin = mainPlugin;
         this.guis = new ArrayList<MapGUI>();
+        this.toRemove = new ArrayList<MapGUI>();
     }
 
     public void onEnable() {
@@ -34,9 +43,10 @@ public class MapGuiCollection {
     }
 
     public void onDisable() {
-        for (MapGUI gui : guis) {
+        check();
+        for (MapGUI gui : guis)
             gui.dispose();
-        }
+        check();
     }
 
     public PlayerMapGUI registerMapGuiForPlayer(Plugin yourPlugin, Player player) {
@@ -44,15 +54,17 @@ public class MapGuiCollection {
         gui.addStateListener(new MapGUIStateListenerAdapter() {
             @Override
             public void onDispose(final MapGUI me) {
-                Bukkit.getScheduler().runTask(mainPlugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        guis.remove(me);
-                    }
-                });
+                toRemove.add(me);
+                Bukkit.getScheduler().runTask(mainPlugin, checkTask);
             }
         });
         guis.add(gui);
         return gui;
+    }
+
+    private void check() {
+        for (MapGUI gui : toRemove)
+            guis.remove(gui);
+        toRemove.clear();
     }
 }
