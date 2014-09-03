@@ -71,14 +71,15 @@ public class RadioButtonComponent extends Checkbox implements RadioButton {
         @Override
         public void drawAsync(Graphics2D canvas, int width, int height) {
             canvas.setColor(Color.BLACK);
-            canvas.drawOval(0, 0, width, height);
+            canvas.drawOval(0, 0, width - 1, height - 1);
         }
     }
 
     private static class CheckedDrawable extends UncheckedDrawable {
         @Override
         public void drawAsync(Graphics2D g, int width, int height) {
-            g.fillOval(0, 0, width, height);
+            g.setColor(Color.BLACK);
+            g.fillOval(0, 0, width - 1, height - 1);
         }
     }
 }

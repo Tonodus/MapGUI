@@ -17,7 +17,7 @@ public class RadioGroup extends ComponentsContainerComponent<RadioButton> {
     }
 
     public void setChecked(RadioButton button) {
-        if (!hasComponent(button))
+        if (button != null && !hasComponent(button))
             throw new IllegalArgumentException("RadioButton (" + button + ") isn't added to this list, can't set it!");
         onCheck(button);
     }
@@ -26,6 +26,7 @@ public class RadioGroup extends ComponentsContainerComponent<RadioButton> {
         if (active != null) active.onNotCheckedAnymore();
         active = me;
         if (me != null) me.onChecked();
+        invalidate();
     }
 
     private class CheckClickListener extends MouseAdapter {
